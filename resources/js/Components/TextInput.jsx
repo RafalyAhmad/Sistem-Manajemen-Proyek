@@ -54,7 +54,7 @@ export default forwardRef(function TextInput(
                     absolute left-3 transition-all duration-300 ease-in-out cursor-text
                     ${
                         shouldFloat
-                            ? "text-xs text-gray-500 top-[-10px] bg-white px-1 z-10" // Posisi Mengapung
+                            ? "text-xs text-gray-500 top-[-10px] bg-white px-1" // Posisi Mengapung
                             : "text-base text-gray-500 top-3" // Posisi Default (di dalam input)
                     }
                 `}

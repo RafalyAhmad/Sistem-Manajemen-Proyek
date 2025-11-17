@@ -8,7 +8,7 @@ import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        username: "",
+        email: "",
         password: "",
         remember: false,
     });
@@ -57,25 +57,25 @@ export default function Login({ status, canResetPassword }) {
                         <span className="text-3xl font-bold">GiPM</span>
                     </div>
 
-                    <h2 className="text-2xl font-semibold">Login</h2>
+                    <h2 className="text-2xl font-semibold">Log in</h2>
 
                     <form onSubmit={submit}>
                         <div className="mt-4">
                             <TextInput
-                                id="username"
-                                type="text"
-                                name="username"
-                                label="Username"
-                                value={data.username}
+                                id="email"
+                                type="email"
+                                name="email"
+                                label="Email"
+                                value={data.email}
                                 className="mt-1 block w-full"
-                                autoComplete="username"
+                                autoComplete="email"
                                 isFocused={true}
                                 onChange={(e) =>
-                                    setData("username", e.target.value)
+                                    setData("email", e.target.value)
                                 }
                             />
                             <InputError
-                                message={errors.username}
+                                message={errors.email}
                                 className="mt-2"
                             />
                         </div>
@@ -127,8 +127,12 @@ export default function Login({ status, canResetPassword }) {
 
                         {/* Submit Button */}
                         <div className="flex items-center justify-center mt-6">
-                            <Buttons variant="primary" disabled={processing}>
-                                Login
+                            <Buttons
+                                variant="primary"
+                                onClick={submit}
+                                disabled={processing}
+                            >
+                                LOG IN
                             </Buttons>
                         </div>
                     </form>
