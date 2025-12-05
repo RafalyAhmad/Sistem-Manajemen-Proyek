@@ -9,7 +9,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'project_id'; // Set PK sesuai dengan yang Anda definisikan
+    protected $primaryKey = 'project_id'; 
 
     protected $fillable = [
         'user_id',

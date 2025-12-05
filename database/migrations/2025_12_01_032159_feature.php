@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id('feature_id'); // PK
             $table->foreignId('project_id'); 
             $table->text('description')->nullable();
-            $table->enum('status', ['approved','on_progress', 'done'])->default('approved');
+            $table->enum('status', ['approved','in_progress', 'done'])->default('approved');
             $table->decimal('initial_feature_fee', 10, 2);
             $table->decimal('final_feature_fee', 10, 2)->nullable();
             $table->integer('initial_feature_time');

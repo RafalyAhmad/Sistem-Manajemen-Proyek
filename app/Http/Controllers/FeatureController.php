@@ -3,45 +3,45 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Feature;
+use App\Models\Project;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
+use function Laravel\Prompts\select;
 
 class FeatureController extends Controller
-{
-    // READ (Tampilkan semua projects)
-    public function index()
+{    public function index()
     {
         $features = Feature::with('project')->get(); // Ambil projects beserta relasi user
         return Inertia::render('FeatureManagement', [
-            'features' => $features
+            'features' => $features,
+            'projects'=> Project::select('project_id','project_name')->get()
         ]);
     }
-
-    // CREATE (Tampilkan form untuk membuat project baru)
+    
+    // CREATE 
     public function create()
     {
         return Inertia::render('Features');
     }
 
-    // CREATE (Simpan data project baru)
-   // FeatureController.php
-
-// ...
-
 public function store(Request $request)
 {
+    dd ($request->all());
     $validatedData = $request->validate([
         // Asumsi Feature harus memiliki relasi ke Project (project_id)
+        'project_id' => 'required|exists:projects,project_id',
         'description' => 'required|string|max:255', // Nama Fitur
         'initial_feature_fee' => 'required|numeric|min:0',
         'initial_feature_time' => 'required|numeric|min:0', // Asumsi ini adalah hari/jam
-        'status' => 'required|in:in_progress,complete',
+        'status' => 'required|in:approved, in_progress, done',
+        'external_input'=> 'required|numeric',
+        'external_output'=> 'required|numeric',
+        'logical_internal_file'=> 'required|numeric',
+        'external_interface_file'=> 'required|numeric',
+        'external_inquiry'=> 'required|numeric',
         // Hapus semua validasi properti Project yang tidak diperlukan.
     ]);
-
     Feature::create($validatedData);
-
-    return Redirect::route('feature.index')->with('success', 'Fitur berhasil ditambahkan.');
 }
 
     // UPDATE (Tampilkan form untuk mengedit)

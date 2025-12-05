@@ -7,7 +7,7 @@ import SidebarLayout from "@/Layouts/SidebarLayout";
 // Jika 'feature' terhubung ke 'user' atau 'project', sesuaikan dengan struktur data yang benar.
 
 export default function FeatureManagement({ features }) {
-    const { users } = usePage().props; // nanti kita kirim dari controller
+    const { projects } = usePage().props; // nanti kita kirim dari controller
 
     const {
         data,
@@ -18,20 +18,63 @@ export default function FeatureManagement({ features }) {
         reset,
     } = useForm({
         id: "",
-        user_id: "",
-        // Hapus 'project_name', 'initial_project_fee', 'initial_project_time' karena ini untuk Project, BUKAN Feature.
-        // Hapus properti project yang tidak digunakan di form ini
-        // data form untuk feature:
+        project_id: "",
         initial_feature_fee: "",
         initial_feature_time: "",
         status: "in_progress",
-        // TAMBAHKAN 'description' ke state useForm, agar bisa diakses di form
         description: "",
-        // Hapus properti yang tidak digunakan di form ini
-        // working_hour_per_day: "",
-        // development_cost_per_day: "",
-        // line_of_code_per_day: "",
+        initial_feature_fee: "",
+        final_feature_fee: "",
+        initial_feature_time: "",
+        final_feature_time: "",
+        change_feature_fee: "",
+        change_feature_time: "",
+        total_cfp: "",
+        updated_at: "",
+        total_change_feature_fee: "",
+        total_change_feature_time: "",
+        external_input: "",
+        external_output: "",
+        logical_internal_file: "",
+        external_interface_file: "",
+        external_inquiry: "",
     });
+
+    // Asumsikan data/state Anda diperbarui dengan fungsi setData(key, value)
+    const handleInputChange = (field, value) => {
+        // 1. Update nilai field yang berubah
+        setData(field, value);
+
+        // 2. Ambil nilai terbaru untuk perhitungan
+        // Pastikan konversi ke integer/float (jika input adalah string)
+        const input =
+            field === "external_input"
+                ? parseInt(value) || 0
+                : parseInt(data.external_input) || 0;
+        const output =
+            field === "external_output"
+                ? parseInt(value) || 0
+                : parseInt(data.external_output) || 0;
+        const database =
+            field === "logical_internal_file"
+                ? parseInt(value) || 0
+                : parseInt(data.logical_internal_file) || 0;
+        const api_diakses =
+            field === "external_interface_file"
+                ? parseInt(value) || 0
+                : parseInt(data.external_interface_file) || 0;
+        const external_inquiry =
+            field === "external_inquiry"
+                ? parseInt(value) || 0
+                : parseInt(data.external_inquiry) || 0;
+
+        // 3. Lakukan perhitungan
+        const total_cfp_baru =
+            input * output * database * api_diakses * external_inquiry;
+
+        // 4. Update state Total CFP
+        setData("total_cfp", total_cfp_baru);
+    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -50,13 +93,10 @@ export default function FeatureManagement({ features }) {
     const editFeature = (feature) => {
         setData({
             id: feature.id,
-            // Perbaiki: Sesuaikan dengan field yang ada di data
             initial_feature_fee: feature.initial_feature_fee,
             initial_feature_time: feature.initial_feature_time,
             status: feature.status,
-            description: feature.description, // Pastikan field ini ada di object 'feature'
-            // Reset field lain jika diperlukan, atau hanya perbarui field yang relevan
-            user_id: feature.user_id, // Jika user_id ada
+            description: feature.description,
         });
     };
 
@@ -69,41 +109,191 @@ export default function FeatureManagement({ features }) {
     return (
         <SidebarLayout>
             <h1 className="text-2xl font-bold mb-6">Feature Management</h1>{" "}
-            {/* Judul diperbaiki */}
             {/* ========== FORM ========== */}
             <form onSubmit={submit} className="grid grid-cols-2 gap-4 mb-8">
-                {/* DESKRIPSI FITUR */}
+                {/* USER */}
+                <div>
+                    <label className="block mb-1 font-semibold">Proyek</label>
+                    <select
+                        className="w-full border rounded px-3 py-2"
+                        value={data.project_id}
+                        onChange={(e) => setData("project_id", e.target.value)}
+                    >
+                        <option value="">-- Pilih project --</option>
+
+                        {projects?.map((project) => (
+                            <option
+                                key={project.project_id}
+                                value={project.project_id}
+                            >
+                                {project.project_name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
                 <div>
                     <label className="block mb-1 font-semibold">
-                        Nama Fitur / Deskripsi
+                        Nama Fitur
                     </label>
                     <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
                         placeholder="Nama fitur"
-                        // PERBAIKAN 1 untuk TypeError:
-                        // Mengakses 'data.description' BUKAN 'data.feature.description'
                         value={data.description}
                         onChange={(e) => setData("description", e.target.value)}
                     />
                 </div>
-
-                {/* INITIAL FEE */}
                 <div>
                     <label className="block mb-1 font-semibold">
-                        Biaya Awal Fitur - Function Point
+                        Biaya Awal Fitur
                     </label>
                     <input
                         type="number"
                         className="w-full border rounded px-3 py-2"
+                        placeholder=""
                         value={data.initial_feature_fee}
                         onChange={(e) =>
                             setData("initial_feature_fee", e.target.value)
                         }
                     />
                 </div>
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Biaya Akhir Fitur
+                    </label>
+                    <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.final_feature_fee}
+                        onChange={(e) =>
+                            setData("final_feature_fee", e.target.value)
+                        }
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Waktu Awal Fitur
+                    </label>
+                    <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.initial_feature_time}
+                        onChange={(e) =>
+                            setData("initial_feature_time", e.target.value)
+                        }
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Waktu Akhir Fitur
+                    </label>
+                    <input
+                        type="text"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.final_feature_time}
+                        onChange={(e) =>
+                            setData("final_feature_time", e.target.value)
+                        }
+                    />
+                </div>
 
-                {/* Anda mungkin ingin menambahkan input untuk initial_feature_time dan status di sini */}
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Jumlah input
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.external_input}
+                        onChange={(e) =>
+                            handleInputChange("external_input", e.target.value)
+                        }
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Jumlah Output
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.external_output}
+                        onChange={(e) =>
+                            handleInputChange("external_output", e.target.value)
+                        }
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Database diakses
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.logical_internal_file}
+                        onChange={(e) =>
+                            handleInputChange(
+                                "logical_internal_file",
+                                e.target.value
+                            )
+                        }
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        API diakses
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.external_interface_file}
+                        onChange={(e) =>
+                            handleInputChange(
+                                "external_interface_file",
+                                e.target.value
+                            )
+                        }
+                        // onChange={(e) => setData("description", e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        External inquiry
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.external_inquiry}
+                        onChange={(e) =>
+                            handleInputChange(
+                                "external_inquiry",
+                                e.target.value
+                            )
+                        }
+                        // onChange={(e) => setData("description", e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Total CFP
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        placeholder=""
+                        value={data.total_cfp}
+                        onChange={(e) => setData("total_cfp", e.target.value)}
+                    />
+                </div>
 
                 <div className="col-span-2">
                     <button
@@ -128,12 +318,8 @@ export default function FeatureManagement({ features }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* PASTIKAN 'features' adalah array dan memiliki properti 'id' */}
                         {features.map((feature) => (
-                            // PERBAIKAN 2 untuk Warning Key:
-                            // Gunakan 'feature.id' sebagai key, BUKAN p.id (menggunakan nama variabel yang jelas)
                             <tr key={feature.id} className="hover:bg-gray-50">
-                                {/* Ganti p.description?.name dengan properti yang benar, kemungkinan 'feature.description' */}
                                 <td className="border p-2">
                                     {feature.description}
                                 </td>

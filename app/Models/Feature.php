@@ -25,6 +25,11 @@ class Feature extends Model
         'updated at',
         'total_change_feature_fee',
         'total_change_feature_time',
+        'external_input',
+        'external_output',
+        'logical_internal_file',
+        'external_interface_file',
+        'external_inquiry',
     ];
 
     // Hubungan ke User (Foreign Key user_id)
