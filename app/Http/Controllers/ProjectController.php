@@ -15,7 +15,7 @@ class ProjectController extends Controller
         $projects = Project::with('user')->get(); // Ambil projects beserta relasi user
         return Inertia::render('ProjectManagement', [
             'projects' => $projects,
-            'users' => User::select('id', 'name', 'email', 'role')->get()
+            'users' => User::select('id', 'name', 'email')->get()
 
         ]);
     }

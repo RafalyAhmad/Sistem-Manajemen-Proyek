@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useForm } from "@inertiajs/react";
+import React from "react";
+import { useForm, usePage } from "@inertiajs/react";
 import SidebarLayout from "@/Layouts/SidebarLayout";
 
-export default function UserManagement({ users }) {
+export default function UserManagement({ users, roles }) {
     const {
         data,
         setData,
@@ -14,7 +14,8 @@ export default function UserManagement({ users }) {
         id: "",
         name: "",
         email: "",
-        role: "user",
+        role: "",
+        password: "",
     });
 
     const submit = (e) => {
@@ -36,7 +37,8 @@ export default function UserManagement({ users }) {
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.role,
+            role: user.roles?.[0]?.name || "",
+            password: "",
         });
     };
 
@@ -47,71 +49,95 @@ export default function UserManagement({ users }) {
     };
 
     return (
-        <div style={{ padding: "30px" }}>
-            <SidebarLayout>
-                <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>
-                    User Management
-                </h1>
+        <SidebarLayout title="User Management">
+            <h1 className="text-2xl font-bold mb-5">User Management</h1>
 
-                {/* FORM */}
-                <form onSubmit={submit} style={{ margin: "20px 0" }}>
+            {/* FORM */}
+            <form onSubmit={submit} className="space-y-3 mb-10">
+                <input
+                    type="text"
+                    placeholder="Nama"
+                    value={data.name}
+                    onChange={(e) => setData("name", e.target.value)}
+                    className="border p-2 w-full rounded"
+                />
+
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={data.email}
+                    onChange={(e) => setData("email", e.target.value)}
+                    className="border p-2 w-full rounded"
+                />
+
+                {/* TAMPILKAN PASSWORD HANYA SAAT TAMBAH USER */}
+                {!data.id && (
                     <input
-                        type="text"
-                        placeholder="Nama"
-                        value={data.name}
-                        onChange={(e) => setData("name", e.target.value)}
+                        type="password"
+                        placeholder="Password"
+                        value={data.password}
+                        onChange={(e) => setData("password", e.target.value)}
+                        className="border p-2 w-full rounded"
                     />
+                )}
 
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={data.email}
-                        onChange={(e) => setData("email", e.target.value)}
-                    />
+                <select
+                    value={data.role}
+                    onChange={(e) => setData("role", e.target.value)}
+                    className="border p-2 w-full rounded"
+                >
+                    <option value="">-- Pilih Role --</option>
+                    {roles.map((r) => (
+                        <option key={r} value={r}>
+                            {r}
+                        </option>
+                    ))}
+                </select>
 
-                    <select
-                        value={data.role}
-                        onChange={(e) => setData("role", e.target.value)}
-                    >
-                        <option value="Project Manager">Project Manager</option>
-                        <option value="Developer">Developer</option>
-                        <option value="Client">Client</option>
-                    </select>
+                <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                    {data.id ? "Update" : "Simpan"}
+                </button>
+            </form>
 
-                    <button type="submit">
-                        {data.id ? "Update" : "Simpan"}
-                    </button>
-                </form>
-
-                {/* TABLE */}
-                <table border="1" cellPadding="8">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Aksi</th>
+            {/* TABLE */}
+            <table className="w-full border">
+                <thead className="bg-gray-200">
+                    <tr>
+                        <th className="p-2 border">Nama</th>
+                        <th className="p-2 border">Email</th>
+                        <th className="p-2 border">Role</th>
+                        <th className="p-2 border">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {users.map((u) => (
+                        <tr key={u.id}>
+                            <td className="p-2 border">{u.name}</td>
+                            <td className="p-2 border">{u.email}</td>
+                            <td className="p-2 border font-semibold">
+                                {u.roles?.[0]?.name || "-"}
+                            </td>
+                            <td className="p-2 border flex gap-2">
+                                <button
+                                    onClick={() => editUser(u)}
+                                    className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => deleteUser(u.id)}
+                                    className="bg-red-600 text-white px-3 py-1 rounded"
+                                >
+                                    Hapus
+                                </button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((u) => (
-                            <tr key={u.id}>
-                                <td>{u.name}</td>
-                                <td>{u.email}</td>
-                                <td>{u.role}</td>
-                                <td>
-                                    <button onClick={() => editUser(u)}>
-                                        Edit
-                                    </button>
-                                    <button onClick={() => deleteUser(u.id)}>
-                                        Hapus
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </SidebarLayout>
-        </div>
+                    ))}
+                </tbody>
+            </table>
+        </SidebarLayout>
     );
 }

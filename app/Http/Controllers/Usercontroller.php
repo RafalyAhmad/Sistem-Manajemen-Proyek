@@ -2,54 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function index()
     {
         return Inertia::render('UserManagement', [
-            'users' => User::select('id', 'name', 'email', 'role')->get()
+            'users' => User::with('roles')->get(),
+            'roles' => Role::pluck('name'),
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name'  => 'required|string',
-            'email' => 'required|email|unique:users',
-            'role'  => 'required'
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users',
+            'role'     => 'required|exists:roles,name',
+            'password' => 'required|min:6'
         ]);
 
-        User::create([
+        $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
-            'role'     => $request->role,
-            'password' => bcrypt('12345678'),
+            'password' => Hash::make($request->password),
         ]);
+
+        // ✅ SPATIE ROLE
+        $user->assignRole($request->role);
 
         return redirect()->back();
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         $request->validate([
-            'name'  => 'required|string',
+            'name'  => 'required|string|max:255',
             'email' => 'required|email',
-            'role'  => 'required'
+            'role'  => 'required|exists:roles,name',
         ]);
 
-        User::where('id', $id)
-            ->update($request->only('name','email','role'));
+        $user->update([
+            'name'  => $request->name,
+            'email' => $request->email,
+        ]);
+
+        // ✅ update role
+        $user->syncRoles([$request->role]);
 
         return redirect()->back();
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        User::destroy($id);
+        $user->delete();
 
         return redirect()->back();
     }
