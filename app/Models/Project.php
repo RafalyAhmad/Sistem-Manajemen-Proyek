@@ -35,4 +35,10 @@ class Project extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function features()
+{
+    return $this->belongsToMany(Feature::class, 'feature_project', 'project_id', 'feature_id');
+}
+
 }

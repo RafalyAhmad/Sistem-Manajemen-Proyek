@@ -47,7 +47,7 @@ export default function SidebarLayout({ title, children }) {
 
                         <li>
                             <Link
-                                href="#"
+                                href="/meetings"
                                 className="block px-3 py-2 rounded hover:bg-blue-100"
                             >
                                 Meeting
@@ -56,7 +56,7 @@ export default function SidebarLayout({ title, children }) {
 
                         <li>
                             <Link
-                                href="#"
+                                href="/contracts"
                                 className="block px-3 py-2 rounded hover:bg-blue-100"
                             >
                                 Contract
@@ -69,15 +69,6 @@ export default function SidebarLayout({ title, children }) {
                                 className="block px-3 py-2 rounded font-semibold text-blue-600 hover:bg-blue-100"
                             >
                                 Users
-                            </Link>
-                        </li>
-
-                        <li>
-                            <Link
-                                href="#"
-                                className="block px-3 py-2 rounded hover:bg-blue-100"
-                            >
-                                General
                             </Link>
                         </li>
 

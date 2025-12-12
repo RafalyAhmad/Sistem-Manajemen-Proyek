@@ -2,7 +2,9 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ContractController;
 use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
@@ -53,5 +55,17 @@ Route::get('/features', [FeatureController::class, 'index']);
 Route::post('/features', [FeatureController::class, 'store']);
 Route::put('/features/{id}', [FeatureController::class, 'update']);
 Route::delete('/features/{id}', [FeatureController::class, 'destroy']);
+
+// Meeting control
+Route::get('/meetings', [MeetingController::class, 'index']);
+Route::post('/meetings', [MeetingController::class, 'store']);
+Route::put('/meetings/{meeting}', [MeetingController::class, 'update']);
+Route::delete('/meetings/{meeting}', [MeetingController::class, 'destroy']);
+
+// Contract control
+Route::get('/contracts', [ContractController::class, 'index']);
+Route::post('/contracts', [ContractController::class, 'store']);
+Route::put('/contracts/{contract}', [ContractController::class, 'update']);
+Route::delete('/contracts/{contract}', [ContractController::class, 'destroy']);
 
 require __DIR__.'/auth.php';

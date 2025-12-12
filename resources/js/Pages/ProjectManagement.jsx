@@ -2,8 +2,8 @@ import React from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import SidebarLayout from "@/Layouts/SidebarLayout";
 
-export default function ProjectManagement({ projects }) {
-    const { users } = usePage().props; // nanti kita kirim dari controller
+export default function ProjectManagement({ projects, features }) {
+    const { users, feature } = usePage().props; // nanti kita kirim dari controller
 
     const {
         data,
@@ -16,13 +16,43 @@ export default function ProjectManagement({ projects }) {
         id: "",
         user_id: "",
         project_name: "",
+        feature_description: [],
         initial_project_fee: "",
         initial_project_time: "",
         status: "in_progress",
         working_hour_per_day: "",
         development_cost_per_day: "",
         line_of_code_per_day: "",
+        total_cfp: "",
     });
+
+    const handleInputChange = (field, value) => {
+        setData(field, value);
+
+        const input =
+            field === "external_input"
+                ? parseInt(value) || 0
+                : parseInt(data.external_input) || 0;
+        const output =
+            field === "external_output"
+                ? parseInt(value) || 0
+                : parseInt(data.external_output) || 0;
+        const database =
+            field === "logical_internal_file"
+                ? parseInt(value) || 0
+                : parseInt(data.logical_internal_file) || 0;
+        const api =
+            field === "external_interface_file"
+                ? parseInt(value) || 0
+                : parseInt(data.external_interface_file) || 0;
+        const inquiry =
+            field === "external_inquiry"
+                ? parseInt(value) || 0
+                : parseInt(data.external_inquiry) || 0;
+
+        const total = input * output * database * api * inquiry;
+        setData("total_cfp", total);
+    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -43,9 +73,11 @@ export default function ProjectManagement({ projects }) {
             id: project.id,
             user_id: project.user_id,
             project_name: project.project_name,
+            feature_name: feature.feature_description,
             initial_project_fee: project.initial_project_fee,
             initial_project_time: project.initial_project_time,
             status: project.status,
+            total_cfp: feature.total_cfp,
         });
     };
 
@@ -77,6 +109,53 @@ export default function ProjectManagement({ projects }) {
                         ))}
                     </select>
                 </div>
+                {/* FEATURES */}
+                <div>
+                    <label className="block mb-1 font-semibold">Features</label>
+
+                    <div className="border rounded p-3 space-y-2 max-h-48 overflow-y-auto">
+                        {features?.map((feature) => {
+                            const selected = data.features ?? []; // fallback aman
+
+                            return (
+                                <label
+                                    key={feature.id}
+                                    className="flex items-center gap-2"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        value={feature.id}
+                                        checked={selected.includes(
+                                            String(feature.id)
+                                        )}
+                                        onChange={(e) => {
+                                            const id = e.target.value;
+
+                                            if (selected.includes(id)) {
+                                                setData(
+                                                    "features",
+                                                    selected.filter(
+                                                        (f) => f !== id
+                                                    )
+                                                );
+                                            } else {
+                                                setData("features", [
+                                                    ...selected,
+                                                    id,
+                                                ]);
+                                            }
+                                        }}
+                                    />
+
+                                    <span>
+                                        {feature.description}-
+                                        {feature.total_cfp}
+                                    </span>
+                                </label>
+                            );
+                        })}
+                    </div>
+                </div>
 
                 {/* PROJECT NAME */}
                 <div>
@@ -90,36 +169,6 @@ export default function ProjectManagement({ projects }) {
                         value={data.project_name}
                         onChange={(e) =>
                             setData("project_name", e.target.value)
-                        }
-                    />
-                </div>
-
-                {/* INITIAL FEE */}
-                <div>
-                    <label className="block mb-1 font-semibold">
-                        Biaya Awal Project - Function Point
-                    </label>
-                    <input
-                        type="number"
-                        className="w-full border rounded px-3 py-2"
-                        value={data.initial_project_fee}
-                        onChange={(e) =>
-                            setData("initial_project_fee", e.target.value)
-                        }
-                    />
-                </div>
-
-                {/* INITIAL DATE */}
-                <div>
-                    <label className="block mb-1 font-semibold">
-                        Tanggal Awal Project
-                    </label>
-                    <input
-                        type="date"
-                        className="w-full border rounded px-3 py-2"
-                        value={data.initial_project_time}
-                        onChange={(e) =>
-                            setData("initial_project_time", e.target.value)
                         }
                     />
                 </div>
@@ -222,15 +271,43 @@ export default function ProjectManagement({ projects }) {
                     />
                 </div>
 
-                <div className="col-span-2">
-                    <button
-                        type="submit"
-                        className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
-                    >
-                        {data.id ? "Update Project" : "Simpan Project"}
-                    </button>
+                {/* INITIAL FEE */}
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Biaya Awal Project - Function Point
+                    </label>
+                    <input
+                        type="number"
+                        className="border p-2 rounded bg-gray-100 col-span-2"
+                        value={data.initial_project_fee}
+                        readOnly
+                    />
+                </div>
+
+                {/* INITIAL DATE */}
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Tanggal Awal Project
+                    </label>
+                    <input
+                        type="date"
+                        className="w-full border rounded px-3 py-2"
+                        value={data.initial_project_time}
+                        onChange={(e) =>
+                            setData("initial_project_time", e.target.value)
+                        }
+                    />
                 </div>
             </form>
+
+            <div className="col-span-2">
+                <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+                >
+                    {data.id ? "Update Project" : "Simpan Project"}
+                </button>
+            </div>
 
             {/* ========== TABEL ========== */}
             <div className="overflow-x-auto">
