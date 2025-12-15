@@ -12,23 +12,24 @@ class Feature extends Model
     protected $primaryKey = 'feature_id'; 
     protected $fillable = [
         'project_id',
+        'feature_name',
         'description',
         'status',
+        'external_input',
+        'external_output',
+        'logical_internal_file',
+        'external_interface_file',
+        'external_inquiry',
+        'feature_cfp',
         'initial_feature_fee',
         'final_feature_fee',
         'initial_feature_time',
         'final_feature_time',
         'change_feature_fee',
         'change_feature_time',
-        'total_cfp',
         'updated at',
         'total_change_feature_fee',
         'total_change_feature_time',
-        'external_input',
-        'external_output',
-        'logical_internal_file',
-        'external_interface_file',
-        'external_inquiry',
     ];
 
     // Hubungan ke User (Foreign Key user_id)

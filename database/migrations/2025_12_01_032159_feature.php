@@ -11,18 +11,25 @@ return new class extends Migration
     Schema::create('features', function (Blueprint $table) {
             $table->id('feature_id'); // PK
             $table->foreignId('project_id'); 
-            $table->text('description')->nullable();
+            $table->string('feature_name');
+            $table->text('description');
             $table->enum('status', ['approved','in_progress', 'done'])->default('approved');
-            $table->decimal('initial_feature_fee', 10, 2);
+            $table->integer('external_input');
+            $table->integer('external_output');
+            $table->integer('logical_internal_file');
+            $table->integer('external_interface_file');
+            $table->integer('external_inquiry');
+            $table->integer('feature_cfp');
+            $table->decimal('initial_feature_fee', 10, 2)->nullable();
             $table->decimal('final_feature_fee', 10, 2)->nullable();
-            $table->integer('initial_feature_time');
+            $table->integer('initial_feature_time')->nullable();
             $table->integer('final_feature_time')->nullable();
             $table->decimal('change_feature_fee', 10, 2)->nullable();
             $table->integer('change_feature_time')->nullable();
-            $table->integer('total_cfp')->nullable();
             $table->dateTime('updated at')->nullable();
             $table->integer('total_change_feature_fee')->nullable();
             $table->integer('total_change_feature_time')->nullable();
+           
             $table->timestamps();    });
     }
  

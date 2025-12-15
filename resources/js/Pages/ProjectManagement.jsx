@@ -148,8 +148,8 @@ export default function ProjectManagement({ projects, features }) {
                                     />
 
                                     <span>
-                                        {feature.description}-
-                                        {feature.total_cfp}
+                                        {feature.feature_name}-
+                                        {feature.feature_cfp}
                                     </span>
                                 </label>
                             );

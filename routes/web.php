@@ -53,8 +53,8 @@ Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
 // Feature control
 Route::get('/features', [FeatureController::class, 'index']);
 Route::post('/features', [FeatureController::class, 'store']);
-Route::put('/features/{id}', [FeatureController::class, 'update']);
-Route::delete('/features/{id}', [FeatureController::class, 'destroy']);
+Route::put('/features/{feature}', [FeatureController::class, 'update']);
+Route::delete('/features/{feature}', [FeatureController::class, 'destroy']);
 
 // Meeting control
 Route::get('/meetings', [MeetingController::class, 'index']);

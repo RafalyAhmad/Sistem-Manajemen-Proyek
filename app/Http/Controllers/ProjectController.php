@@ -17,7 +17,7 @@ class ProjectController extends Controller
         return Inertia::render('ProjectManagement', [
             'projects' => Project::with(['user', 'features'])->get(),
             'users' => User::select('id', 'name', 'email')->get(),
-            'features' => Feature::select('feature_id as id', 'description','total_cfp')->get(),
+            'features' => Feature::select('feature_id as id', 'feature_name','feature_cfp')->get(),
         ]);
     }
 

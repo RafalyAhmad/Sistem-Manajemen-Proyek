@@ -28,23 +28,20 @@ public function store(Request $request)
 {
     $validatedData = $request->validate([
         'project_id' => 'required|exists:projects,project_id',
+        'feature_name'=>'required|string|max:255',
         'description' => 'required|string|max:255',
-
-        'initial_feature_fee' => 'required|numeric',
-        'final_feature_fee' => 'required|numeric',
-
-        'initial_feature_time' => 'required|numeric',
-        'final_feature_time' => 'required|numeric',
-
+        'status' => 'required|in:approved,in_progress,done',
         'external_input' => 'required|numeric',
         'external_output' => 'required|numeric',
         'logical_internal_file' => 'required|numeric',
         'external_interface_file' => 'required|numeric',
         'external_inquiry' => 'required|numeric',
+        'feature_cfp' => 'required|numeric',
 
-        'total_cfp' => 'required|numeric',
-
-        'status' => 'required|in:approved,in_progress,done'
+        // 'initial_feature_fee' => 'required|numeric',
+        // 'final_feature_fee' => 'required|numeric',
+        // 'initial_feature_time' => 'required|numeric',
+        // 'final_feature_time' => 'required|numeric',
     ]);
 
     Feature::create($validatedData);
@@ -64,12 +61,16 @@ public function store(Request $request)
    public function update(Request $request, Feature $feature)
 {
     $validatedData = $request->validate([
+        'project_id' => 'required|exists:projects,project_id',
+        'feature_name'=>'required|string|max:255',
         'description' => 'required|string|max:255',
-        'initial_feature_fee' => 'required|numeric',
-        'final_feature_fee' => 'required|numeric',
-        'initial_feature_time' => 'required|numeric',
-        'final_feature_time' => 'required|numeric',
-        'status' => 'required|in:approved,in_progress,done'
+        'status' => 'required|in:approved,in_progress,done',
+        'external_input' => 'required|numeric',
+        'external_output' => 'required|numeric',
+        'logical_internal_file' => 'required|numeric',
+        'external_interface_file' => 'required|numeric',
+        'external_inquiry' => 'required|numeric',
+        'feature_cfp' => 'required|numeric',
     ]);
 
     $feature->update($validatedData);
