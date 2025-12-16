@@ -47,8 +47,8 @@ Route::delete('/users/{id}', [UserController::class, 'destroy']);
 // Project control
 Route::get('/projects', [ProjectController::class, 'index']);
 Route::post('/projects', [ProjectController::class, 'store']);
-Route::put('/projects/{id}', [ProjectController::class, 'update']);
-Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+Route::put('/projects/{project}', [ProjectController::class, 'update']);
+Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
 
 // Feature control
 Route::get('/features', [FeatureController::class, 'index']);

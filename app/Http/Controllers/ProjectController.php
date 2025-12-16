@@ -16,7 +16,7 @@ class ProjectController extends Controller
     {
         return Inertia::render('ProjectManagement', [
             'projects' => Project::with(['user', 'features'])->get(),
-            'users' => User::select('id', 'name', 'email')->get(),
+            'users' => User::select('id', 'name')->get(),
             'features' => Feature::select('feature_id as id', 'feature_name','feature_cfp')->get(),
         ]);
     }
@@ -36,13 +36,19 @@ class ProjectController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'project_name' => 'required|string|max:255',
-            'initial_project_fee' => 'required|numeric|min:0',
-            'initial_project_time' => 'required|date',
+            'initial_project_fee' => 'required|numeric',
+            'final_project_fee'=> 'required|numeric',
+            'initial_project_time' => 'required|numeric',
+            'final_project_time'=> 'required|numeric',
+            'description'=>'required|string',
             'status' => 'required|in:in_progress,complete',
+            'total_cfp'=> 'required|numeric',
+            'total_rcaf'=> 'required|numeric',
+            'total_feature_fee'=> 'required|numeric',
+            'total_feature_time'=> 'required|numeric',
             'working_hour_per_day' => 'required|numeric|min:1',
             'development_cost_per_day' => 'required|numeric|min:1',
             'line_of_code_per_day' => 'required|numeric|min:1',
-
             // fitur harus array ID
             'features' => 'required|array',
             'features.*' => 'exists:features,feature_id',
@@ -63,7 +69,7 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Edit', [
             'project' => $project->load('features'),
             'users' => User::select('id', 'name')->get(),
-            'features' => Feature::select('id', 'name')->get(),
+            'features' => Feature::select('feature_id', 'feature_name')->get(),
         ]);
     }
 
@@ -71,13 +77,24 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
             'project_name' => 'required|string|max:255',
-            'final_project_fee' => 'nullable|numeric|min:0',
-            'final_project_time' => 'nullable|date',
+            'initial_project_fee' => 'required|numeric|min:0',
+            'final_project_fee'=> 'required|numeric',
+            'initial_project_time' => 'required|numeric',
+            'final_project_time'=> 'required|numeric',
+            'description'=>'required|string',
             'status' => 'required|in:in_progress,complete',
-
+            'total_cfp'=> 'required|numeric',
+            'total_rcaf'=> 'required|numeric',
+            'total_feature_fee'=> 'required|numeric',
+            'total_feature_time'=> 'required|numeric',
+            'working_hour_per_day' => 'required|numeric|min:1',
+            'development_cost_per_day' => 'required|numeric|min:1',
+            'line_of_code_per_day' => 'required|numeric|min:1',
+            // fitur harus array ID
             'features' => 'required|array',
-            'features.*' => 'exists:features,id',
+            'features.*' => 'exists:features,feature_id',
         ]);
 
         $project->update($validatedData);
@@ -85,7 +102,7 @@ class ProjectController extends Controller
         // update relasi fitur
         $project->features()->sync($request->features);
 
-        return Redirect::route('projects.index')->with('success', 'Project berhasil diperbarui.');
+        // return Redirect::route('projects.index')->with('success', 'Project berhasil diperbarui.');
     }
 
     // DELETE PROJECT
@@ -93,6 +110,6 @@ class ProjectController extends Controller
     {
         $project->features()->detach(); // bersihkan pivot
         $project->delete();
-        return Redirect::route('projects.index')->with('success', 'Project berhasil dihapus.');
+        // return Redirect::route('projects.index')->with('success', 'Project berhasil dihapus.');
     }
 }

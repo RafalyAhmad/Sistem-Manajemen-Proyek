@@ -15,16 +15,16 @@ return new class extends Migration
             $table->id('project_id'); // PK
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // FK to 'users' table (as an example)
             $table->string('project_name', 255);
-            $table->decimal('initial_project_fee', 10, 2);
-            $table->decimal('final_project_fee', 10, 2)->nullable();
-            $table->dateTime('initial_project_time');
-            $table->dateTime('final_project_time')->nullable();
-            $table->text('description')->nullable();
+            $table->integer('initial_project_fee');
+            $table->integer('final_project_fee');
+            $table->integer('initial_project_time');
+            $table->integer('final_project_time');
+            $table->text('description');
             $table->enum('status', ['in_progress', 'complete'])->default('in_progress');
-            $table->integer('total_cfp')->nullable();
-            $table->integer('total_rcaf')->nullable();
-            $table->decimal('total_feature_fee', 10, 2)->nullable();
-            $table->integer('total_feature_time')->nullable();
+            $table->integer('total_cfp');
+            $table->integer('total_rcaf');
+            $table->integer('total_feature_fee');
+            $table->integer('total_feature_time');
             $table->timestamps();
         });
     }

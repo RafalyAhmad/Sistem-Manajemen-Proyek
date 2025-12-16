@@ -1,9 +1,12 @@
 import React from "react";
+import { useState } from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import SidebarLayout from "@/Layouts/SidebarLayout";
 
 export default function ProjectManagement({ projects, features }) {
-    const { users, feature } = usePage().props; // nanti kita kirim dari controller
+    const { users } = usePage().props;
+
+    const [factor, setFactor] = useState(1);
 
     const {
         data,
@@ -16,49 +19,75 @@ export default function ProjectManagement({ projects, features }) {
         id: "",
         user_id: "",
         project_name: "",
-        feature_description: [],
         initial_project_fee: "",
+        final_project_fee: "",
         initial_project_time: "",
+        final_project_time: "",
+        description: "",
         status: "in_progress",
+        total_cfp: "",
+        total_rcaf: "",
+        total_feature_fee: "",
+        total_feature_time: "",
         working_hour_per_day: "",
         development_cost_per_day: "",
         line_of_code_per_day: "",
-        total_cfp: "",
+        features: [],
     });
 
-    const handleInputChange = (field, value) => {
-        setData(field, value);
-
-        const input =
-            field === "external_input"
-                ? parseInt(value) || 0
-                : parseInt(data.external_input) || 0;
-        const output =
-            field === "external_output"
-                ? parseInt(value) || 0
-                : parseInt(data.external_output) || 0;
-        const database =
-            field === "logical_internal_file"
-                ? parseInt(value) || 0
-                : parseInt(data.logical_internal_file) || 0;
-        const api =
-            field === "external_interface_file"
-                ? parseInt(value) || 0
-                : parseInt(data.external_interface_file) || 0;
-        const inquiry =
-            field === "external_inquiry"
-                ? parseInt(value) || 0
-                : parseInt(data.external_inquiry) || 0;
-
-        const total = input * output * database * api * inquiry;
+    //Perhitungan
+    const updateTotalCfp = (selectedFeatures) => {
+        const total = features
+            .filter((f) => selectedFeatures.includes(f.id))
+            .reduce((sum, f) => sum + Number(f.feature_cfp), 0);
         setData("total_cfp", total);
     };
+
+    const CalculateTime = (field, value) => {
+        setData(field, value);
+        const work_hour =
+            field === "working_hour_per_day"
+                ? parseInt(value) || 0
+                : parseInt(data.working_hour_per_day) || 0;
+        const line_code =
+            field === "line_of_code_per_day"
+                ? parseInt(value) || 0
+                : parseInt(data.line_of_code_per_day) || 0;
+        const cfp =
+            field === "total_cfp"
+                ? parseInt(value) || 0
+                : parseInt(data.total_cfp) || 0;
+        const rcaf =
+            field === "total_rcaf"
+                ? parseInt(value) || 0
+                : parseInt(data.total_rcaf) || 0;
+        const time =
+            work_hour * ((factor * (cfp * (0.65 + 0.01 * rcaf))) / line_code);
+        setData("initial_project_time", time);
+    };
+
+    const CalculateFee = (field, value) => {
+        setData(field, value);
+        const time =
+            field === "initial_project_time"
+                ? parseInt(value) || 0
+                : parseInt(data.initial_project_time) || 0;
+        const dev_cost =
+            field === "development_cost_per_day"
+                ? parseInt(value) || 0
+                : parseInt(data.development_cost_per_day) || 0;
+
+        const fee = time * dev_cost;
+        setData("initial_project_fee", fee);
+    };
+
+    //button logic
 
     const submit = (e) => {
         e.preventDefault();
 
-        if (data.id !== "" && data.id !== undefined) {
-            put(`/projects/${data.id}`, {
+        if (data.project_id) {
+            put(`/projects/${data.project_id}`, {
                 onSuccess: () => reset(),
             });
         } else {
@@ -70,20 +99,21 @@ export default function ProjectManagement({ projects, features }) {
 
     const editProject = (project) => {
         setData({
-            id: project.id,
+            id: project.project_id,
             user_id: project.user_id,
             project_name: project.project_name,
-            feature_name: feature.feature_description,
+            features: project.features?.map((f) => f.id) ?? [],
             initial_project_fee: project.initial_project_fee,
             initial_project_time: project.initial_project_time,
             status: project.status,
-            total_cfp: feature.total_cfp,
+            total_cfp: project.total_cfp,
+            deskripsi: project.deskripsi,
         });
     };
 
-    const deleteProject = (id) => {
+    const deleteProject = (project_id) => {
         if (confirm("Yakin ingin menghapus project ini?")) {
-            destroy(`/projects/${id}`);
+            destroy(`/projects/${project_id}`);
         }
     };
 
@@ -91,7 +121,7 @@ export default function ProjectManagement({ projects, features }) {
         <SidebarLayout title="Project Management">
             <h1 className="text-2xl font-bold mb-6">Project Management</h1>
 
-            {/* ========== FORM ========== */}
+            {/* ================= FORM ================= */}
             <form onSubmit={submit} className="grid grid-cols-2 gap-4 mb-8">
                 {/* USER */}
                 <div>
@@ -109,53 +139,6 @@ export default function ProjectManagement({ projects, features }) {
                         ))}
                     </select>
                 </div>
-                {/* FEATURES */}
-                <div>
-                    <label className="block mb-1 font-semibold">Features</label>
-
-                    <div className="border rounded p-3 space-y-2 max-h-48 overflow-y-auto">
-                        {features?.map((feature) => {
-                            const selected = data.features ?? []; // fallback aman
-
-                            return (
-                                <label
-                                    key={feature.id}
-                                    className="flex items-center gap-2"
-                                >
-                                    <input
-                                        type="checkbox"
-                                        value={feature.id}
-                                        checked={selected.includes(
-                                            String(feature.id)
-                                        )}
-                                        onChange={(e) => {
-                                            const id = e.target.value;
-
-                                            if (selected.includes(id)) {
-                                                setData(
-                                                    "features",
-                                                    selected.filter(
-                                                        (f) => f !== id
-                                                    )
-                                                );
-                                            } else {
-                                                setData("features", [
-                                                    ...selected,
-                                                    id,
-                                                ]);
-                                            }
-                                        }}
-                                    />
-
-                                    <span>
-                                        {feature.feature_name}-
-                                        {feature.feature_cfp}
-                                    </span>
-                                </label>
-                            );
-                        })}
-                    </div>
-                </div>
 
                 {/* PROJECT NAME */}
                 <div>
@@ -165,11 +148,69 @@ export default function ProjectManagement({ projects, features }) {
                     <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        placeholder="Nama project"
                         value={data.project_name}
                         onChange={(e) =>
                             setData("project_name", e.target.value)
                         }
+                    />
+                </div>
+
+                {/* FEATURES */}
+                <div>
+                    <label className="block mb-1 font-semibold">Features</label>
+                    <div className="border rounded p-3 space-y-2 max-h-48 overflow-y-auto">
+                        {features?.map((feature) => {
+                            const selected = data.features;
+
+                            return (
+                                <label
+                                    key={feature.id}
+                                    className="flex items-center gap-2"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        value={feature.id}
+                                        checked={selected.includes(feature.id)}
+                                        onChange={() => {
+                                            let updated;
+
+                                            if (selected.includes(feature.id)) {
+                                                updated = selected.filter(
+                                                    (f) => f !== feature.id
+                                                );
+                                            } else {
+                                                updated = [
+                                                    ...selected,
+                                                    feature.id,
+                                                ];
+                                            }
+
+                                            setData("features", updated);
+                                            updateTotalCfp(updated); // HITUNG CFP
+                                        }}
+                                    />
+                                    <span>
+                                        {feature.feature_name} -{" "}
+                                        {feature.feature_cfp}
+                                    </span>
+                                </label>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Bahasa Pemrograman
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        value={factor}
+                        onChange={(e) => {
+                            setFactor(Number(e.target.value));
+                            CalculateTime("factor", e.target.value);
+                        }}
                     />
                 </div>
 
@@ -186,7 +227,7 @@ export default function ProjectManagement({ projects, features }) {
                     </select>
                 </div>
 
-                {/* Deskripsi */}
+                {/* DESKRIPSI */}
                 <div className="col-span-2">
                     <label className="block mb-1 font-semibold">
                         Deskripsi
@@ -194,129 +235,201 @@ export default function ProjectManagement({ projects, features }) {
                     <input
                         type="text"
                         className="w-full border rounded px-3 py-2"
-                        placeholder="deskripsi"
-                        value={data.deskripsi}
-                        onChange={(e) => setData("deskripsi", e.target.value)}
+                        value={data.description}
+                        onChange={(e) => setData("description", e.target.value)}
                     />
                 </div>
 
-                {/* CFP */}
+                {/* TOTAL RCAF */}
                 <div>
                     <label className="block mb-1 font-semibold">
-                        Total CFP - Function Point
-                    </label>
-                    <input
-                        type="number"
-                        className="w-full border rounded px-3 py-2"
-                        value={data.total_cfp}
-                        onChange={(e) => setData("total_cfp", e.target.value)}
-                    />
-                </div>
-
-                {/* RCAF */}
-                <div>
-                    <label className="block mb-1 font-semibold">
-                        Total RCAF - Function Point
+                        Total RCAF
                     </label>
                     <input
                         type="number"
                         className="w-full border rounded px-3 py-2"
                         value={data.total_rcaf}
-                        onChange={(e) => setData("total_rcaf", e.target.value)}
+                        onChange={(e) =>
+                            CalculateTime("total_rcaf", e.target.value)
+                        }
                     />
                 </div>
 
-                {/* Working Hour */}
+                {/* TOTAL CFP */}
                 <div>
                     <label className="block mb-1 font-semibold">
-                        Jam bekerja - Function Point
+                        Total CFP
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        value={data.total_cfp}
+                        readOnly
+                        onChange={(e) =>
+                            CalculateTime("total_cfp", e.target.value)
+                        }
+                    />
+                </div>
+
+                {/* Working hour per day */}
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Jam kerja sehari
                     </label>
                     <input
                         type="number"
                         className="w-full border rounded px-3 py-2"
                         value={data.working_hour_per_day}
                         onChange={(e) =>
-                            setData("working_hour_per_day", e.target.value)
+                            CalculateTime(
+                                "working_hour_per_day",
+                                e.target.value
+                            )
                         }
                     />
                 </div>
 
-                {/* Dev Cost */}
+                {/* Dev Cost per hour */}
                 <div>
                     <label className="block mb-1 font-semibold">
-                        Dev Cost - Function Point
+                        Dev Cost per jam
                     </label>
                     <input
                         type="number"
                         className="w-full border rounded px-3 py-2"
                         value={data.development_cost_per_day}
                         onChange={(e) =>
-                            setData("development_cost_per_day", e.target.value)
+                            CalculateFee(
+                                "development_cost_per_day",
+                                e.target.value
+                            )
                         }
                     />
                 </div>
 
-                {/* line of code */}
-                <div>
+                {/* Line of code */}
+                <div className="col-span-2">
                     <label className="block mb-1 font-semibold">
-                        Line Code - Function Point
+                        Baris kode sehari
                     </label>
                     <input
                         type="number"
                         className="w-full border rounded px-3 py-2"
                         value={data.line_of_code_per_day}
                         onChange={(e) =>
-                            setData("line_of_code_per_day", e.target.value)
+                            CalculateTime(
+                                "line_of_code_per_day",
+                                e.target.value
+                            )
                         }
                     />
                 </div>
 
-                {/* INITIAL FEE */}
+                {/* Biaya awal */}
                 <div>
                     <label className="block mb-1 font-semibold">
-                        Biaya Awal Project - Function Point
+                        Biaya Awal Proyek
                     </label>
                     <input
                         type="number"
-                        className="border p-2 rounded bg-gray-100 col-span-2"
+                        className="w-full border rounded px-3 py-2"
                         value={data.initial_project_fee}
                         readOnly
                     />
                 </div>
 
-                {/* INITIAL DATE */}
+                {/* Biaya Akhir */}
                 <div>
                     <label className="block mb-1 font-semibold">
-                        Tanggal Awal Project
+                        Biaya akhir Proyek
                     </label>
                     <input
-                        type="date"
+                        type="number"
                         className="w-full border rounded px-3 py-2"
-                        value={data.initial_project_time}
+                        value={data.final_project_fee}
                         onChange={(e) =>
-                            setData("initial_project_time", e.target.value)
+                            setData("final_project_fee", e.target.value)
                         }
                     />
                 </div>
+
+                {/* Waktu awal */}
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Durasi awal Proyek
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        value={data.initial_project_time}
+                        readOnly
+                        onChange={(e) =>
+                            CalculateFee("initial_project_time", e.target.value)
+                        }
+                    />
+                </div>
+
+                {/* Waktu Akhir */}
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Durasi akhir Proyek
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        value={data.final_project_time}
+                        onChange={(e) =>
+                            CalculateFee("final_project_time", e.target.value)
+                        }
+                    />
+                </div>
+
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Total biaya fitur
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        value={data.total_feature_fee}
+                        onChange={(e) =>
+                            setData("total_feature_fee", e.target.value)
+                        }
+                    />
+                </div>
+
+                <div>
+                    <label className="block mb-1 font-semibold">
+                        Total durasi fitur
+                    </label>
+                    <input
+                        type="number"
+                        className="w-full border rounded px-3 py-2"
+                        value={data.total_feature_time}
+                        onChange={(e) =>
+                            setData("total_feature_time", e.target.value)
+                        }
+                    />
+                </div>
+
+                {/* SUBMIT */}
+                <div className="col-span-2">
+                    <button
+                        type="submit"
+                        className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+                    >
+                        {data.project_id ? "Update Project" : "Simpan Project"}
+                    </button>
+                </div>
             </form>
 
-            <div className="col-span-2">
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
-                >
-                    {data.id ? "Update Project" : "Simpan Project"}
-                </button>
-            </div>
-
-            {/* ========== TABEL ========== */}
+            {/* ================= TABLE ================= */}
             <div className="overflow-x-auto">
                 <table className="w-full border text-center">
                     <thead className="bg-gray-200">
                         <tr>
                             <th className="border p-2">User</th>
                             <th className="border p-2">Project</th>
-                            <th className="border p-2">Biaya</th>
                             <th className="border p-2">Tanggal</th>
                             <th className="border p-2">Status</th>
                             <th className="border p-2">Aksi</th>
@@ -324,12 +437,9 @@ export default function ProjectManagement({ projects, features }) {
                     </thead>
                     <tbody>
                         {projects.map((p) => (
-                            <tr key={p.id} className="hover:bg-gray-50">
+                            <tr key={p.project_id}>
                                 <td className="border p-2">{p.user?.name}</td>
                                 <td className="border p-2">{p.project_name}</td>
-                                <td className="border p-2">
-                                    Rp {p.initial_project_fee}
-                                </td>
                                 <td className="border p-2">
                                     {p.initial_project_time}
                                 </td>
@@ -341,9 +451,10 @@ export default function ProjectManagement({ projects, features }) {
                                     >
                                         Edit
                                     </button>
-
                                     <button
-                                        onClick={() => deleteProject(p.id)}
+                                        onClick={() =>
+                                            deleteProject(p.project_id)
+                                        }
                                         className="bg-red-600 text-white px-3 py-1 rounded"
                                     >
                                         Hapus
