@@ -38,6 +38,15 @@ export default function SidebarLayout({ title, children }) {
 
                         <li>
                             <Link
+                                href="/features"
+                                className="block px-3 py-2 rounded hover:bg-blue-100"
+                            >
+                                Feature Repository
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link
                                 href="#"
                                 className="block px-3 py-2 rounded hover:bg-blue-100"
                             >
@@ -74,7 +83,7 @@ export default function SidebarLayout({ title, children }) {
 
                         <li>
                             <Link
-                                href="/features"
+                                href="/project-boards"
                                 className="block px-3 py-2 rounded hover:bg-blue-100"
                             >
                                 Project Board

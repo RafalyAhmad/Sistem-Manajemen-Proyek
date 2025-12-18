@@ -46,6 +46,7 @@ Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
 // Project control
 Route::get('/projects', [ProjectController::class, 'index']);
+Route::get('/projects/{project}', [ProjectController::class, 'show']);
 Route::post('/projects', [ProjectController::class, 'store']);
 Route::put('/projects/{project}', [ProjectController::class, 'update']);
 Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
@@ -67,5 +68,10 @@ Route::get('/contracts', [ContractController::class, 'index']);
 Route::post('/contracts', [ContractController::class, 'store']);
 Route::put('/contracts/{contract}', [ContractController::class, 'update']);
 Route::delete('/contracts/{contract}', [ContractController::class, 'destroy']);
+
+//Project Board
+Route::get('/project-boards', [ContractController::class, 'index']);
+Route::post('/project-boards', [ContractController::class, 'store']);
+
 
 require __DIR__.'/auth.php';

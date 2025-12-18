@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useForm, usePage } from "@inertiajs/react";
+import { Link, useForm, usePage } from "@inertiajs/react";
 import SidebarLayout from "@/Layouts/SidebarLayout";
 
 export default function ProjectManagement({ projects, features }) {
@@ -16,7 +16,7 @@ export default function ProjectManagement({ projects, features }) {
         delete: destroy,
         reset,
     } = useForm({
-        id: "",
+        project_id: "",
         user_id: "",
         project_name: "",
         initial_project_fee: "",
@@ -63,7 +63,7 @@ export default function ProjectManagement({ projects, features }) {
                 : parseInt(data.total_rcaf) || 0;
         const time =
             work_hour * ((factor * (cfp * (0.65 + 0.01 * rcaf))) / line_code);
-        setData("initial_project_time", time);
+        setData("initial_project_time", Math.round(time));
     };
 
     const CalculateFee = (field, value) => {
@@ -99,15 +99,24 @@ export default function ProjectManagement({ projects, features }) {
 
     const editProject = (project) => {
         setData({
-            id: project.project_id,
+            project_id: project.project_id,
             user_id: project.user_id,
             project_name: project.project_name,
             features: project.features?.map((f) => f.id) ?? [],
             initial_project_fee: project.initial_project_fee,
+            final_project_fee: project.final_project_fee,
             initial_project_time: project.initial_project_time,
+            final_project_time: project.final_project_time,
             status: project.status,
             total_cfp: project.total_cfp,
-            deskripsi: project.deskripsi,
+            description: project.description,
+            total_rcaf: project.total_rcaf,
+            total_feature_fee: project.total_feature_fee,
+            total_feature_time: project.total_feature_time,
+            working_hour_per_day: project.working_hour_per_day,
+            development_cost_per_day: project.development_cost_per_day,
+            line_of_code_per_day: project.line_of_code_per_day,
+            factor: project.factor,
         });
     };
 
@@ -459,6 +468,12 @@ export default function ProjectManagement({ projects, features }) {
                                     >
                                         Hapus
                                     </button>
+                                    <Link
+                                        href={`/projects/${p.project_id}`}
+                                        className="text-blue-600 underline"
+                                    >
+                                        Detail
+                                    </Link>
                                 </td>
                             </tr>
                         ))}

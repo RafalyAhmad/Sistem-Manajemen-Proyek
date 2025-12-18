@@ -21,6 +21,15 @@ class ProjectController extends Controller
         ]);
     }
 
+    public function show(Project $project)
+{
+    $project->load('features');
+
+    return Inertia::render('ProjectShow', [
+        'project' => $project
+    ]);
+}
+
     // CREATE FORM
     public function create()
     {
