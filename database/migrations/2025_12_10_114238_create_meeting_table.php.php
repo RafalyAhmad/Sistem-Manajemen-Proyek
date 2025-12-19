@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('meetings', function (Blueprint $table) {
             $table->id('meeting_id'); // PK
-            $table->foreignId('user_id'); 
-            $table->foreignId('project_id'); 
+            $table->foreignId('user_id');
+            $table->foreignId('project_id');
             $table->text('title');
             $table->text('description');
             $table->text('notulensi');
             $table->datetime('meeting_time');
             $table->string('email_to');
             $table->timestamps();
-            });
+        });
     }
 
     /**

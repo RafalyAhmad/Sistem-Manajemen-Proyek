@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class ClientMiddleware
 {
@@ -13,12 +12,12 @@ class ClientMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-      public function handle($request, Closure $next)
-{
-    if (!$request->user() || !$request->user()->hasRole('client')) {
-        abort(403, 'KHUSUS CLIENT');
-    }
+    public function handle($request, Closure $next)
+    {
+        if (! $request->user() || ! $request->user()->hasRole('client')) {
+            abort(403, 'KHUSUS CLIENT');
+        }
 
-    return $next($request);
-}
+        return $next($request);
+    }
 }

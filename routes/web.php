@@ -1,13 +1,13 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -36,7 +36,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('projects', ProjectController::class);
 });
-
 
 // User control
 Route::get('/users', [UserController::class, 'index']);
@@ -69,9 +68,8 @@ Route::post('/contracts', [ContractController::class, 'store']);
 Route::put('/contracts/{contract}', [ContractController::class, 'update']);
 Route::delete('/contracts/{contract}', [ContractController::class, 'destroy']);
 
-//Project Board
+// Project Board
 Route::get('/project-boards', [ContractController::class, 'index']);
 Route::post('/project-boards', [ContractController::class, 'store']);
-
 
 require __DIR__.'/auth.php';

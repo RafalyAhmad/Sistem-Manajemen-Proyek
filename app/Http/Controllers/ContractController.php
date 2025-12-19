@@ -3,46 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contract;
-use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Redirect;
-use function Laravel\Prompts\select;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ContractController extends Controller
 {
     public function index()
     {
-        $contracts = Contract::with('user','project')->get(); // Ambil projects beserta relasi user
+        $contracts = Contract::with('user', 'project')->get(); // Ambil projects beserta relasi user
+
         return Inertia::render('ContractManagement', [
-            'contracts'=>$contracts,
-            'user'=> User::select('id','name')->get(),
-            'project'=> Project::select('project_id','project_name')->get()
+            'contracts' => $contracts,
+            'user' => User::select('id', 'name')->get(),
+            'project' => Project::select('project_id', 'project_name')->get(),
         ]);
-        
+
     }
-    
-    // CREATE 
+
+    // CREATE
     public function create()
     {
         return Inertia::render('Contracts');
     }
 
-public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'project_id' => 'required|exists:projects,project_id',
-        'user_id' => 'required|exists:users,id',
-        'contract_number' => 'required|string', 
-        'contract_date'=> 'required|date',
-        
-    ]);
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'project_id' => 'required|exists:projects,project_id',
+            'user_id' => 'required|exists:users,id',
+            'contract_number' => 'required|string',
+            'contract_date' => 'required|date',
 
-    Contract::create($validatedData);
-    return redirect()->back()->with('success', 'berhasil ditambahkan.');
-}
+        ]);
+
+        Contract::create($validatedData);
+
+        return redirect()->back()->with('success', 'berhasil ditambahkan.');
+    }
 
     // UPDATE (Tampilkan form untuk mengedit)
     public function edit(Contract $contract)
@@ -53,26 +52,26 @@ public function store(Request $request)
     }
 
     // UPDATE (Simpan perubahan data)
-   public function update(Request $request, Contract $contract)
-{
-    $validatedData = $request->validate([
-       'project_id' => 'required|exists:projects,project_id',
-        'user_id' => 'required|exists:users,id',
-        'contract_number' => 'required|string', 
-        'contract_date'=> 'required|date',
-        
-    ]);
+    public function update(Request $request, Contract $contract)
+    {
+        $validatedData = $request->validate([
+            'project_id' => 'required|exists:projects,project_id',
+            'user_id' => 'required|exists:users,id',
+            'contract_number' => 'required|string',
+            'contract_date' => 'required|date',
 
-    $contract->update($validatedData);
+        ]);
 
-    return redirect()->back()->with('success', 'berhasil diperbarui.');
-}
+        $contract->update($validatedData);
 
+        return redirect()->back()->with('success', 'berhasil diperbarui.');
+    }
 
     // DELETE (Hapus data)
     public function destroy(Contract $contract)
     {
         $contract->delete();
-    return redirect()->back()->with('success', 'berhasil dihapus.');
+
+        return redirect()->back()->with('success', 'berhasil dihapus.');
     }
 }

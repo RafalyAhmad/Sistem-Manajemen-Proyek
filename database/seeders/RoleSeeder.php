@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 class RoleSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class RoleSeeder extends Seeder
             'create project',
             'edit project',
             'delete project',
-            'update progress'
+            'update progress',
         ];
 
         foreach ($permissions as $permission) {
@@ -28,18 +29,19 @@ class RoleSeeder extends Seeder
         $pm = Role::firstOrCreate(['name' => 'project manager']);
         $dev = Role::firstOrCreate(['name' => 'developer']);
         $client = Role::firstOrCreate(['name' => 'client']);
+        $user = User::find(1);
+        $user->assignRole('project manager');
 
         // ATTACH PERMISSION ke ROLE
         $pm->givePermissionTo(Permission::all());
 
         $dev->givePermissionTo([
             'view project',
-            'update progress'
+            'update progress',
         ]);
 
         $client->givePermissionTo([
-            'view project'
+            'view project',
         ]);
     }
 }
-

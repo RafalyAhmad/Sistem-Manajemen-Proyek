@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Project;
 use App\Models\Feature;
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -17,18 +17,18 @@ class ProjectController extends Controller
         return Inertia::render('ProjectManagement', [
             'projects' => Project::with(['user', 'features'])->get(),
             'users' => User::select('id', 'name')->get(),
-            'features' => Feature::select('feature_id as id', 'feature_name','feature_cfp')->get(),
+            'features' => Feature::select('feature_id as id', 'feature_name', 'feature_cfp')->get(),
         ]);
     }
 
     public function show(Project $project)
-{
-    $project->load('features');
+    {
+        $project->load('features');
 
-    return Inertia::render('ProjectShow', [
-        'project' => $project
-    ]);
-}
+        return Inertia::render('ProjectShow', [
+            'project' => $project,
+        ]);
+    }
 
     // CREATE FORM
     public function create()
@@ -46,15 +46,15 @@ class ProjectController extends Controller
             'user_id' => 'required|exists:users,id',
             'project_name' => 'required|string|max:255',
             'initial_project_fee' => 'required|numeric',
-            'final_project_fee'=> 'required|numeric',
+            'final_project_fee' => 'required|numeric',
             'initial_project_time' => 'required|numeric',
-            'final_project_time'=> 'required|numeric',
-            'description'=>'required|string',
+            'final_project_time' => 'required|numeric',
+            'description' => 'required|string',
             'status' => 'required|in:in_progress,complete',
-            'total_cfp'=> 'required|numeric',
-            'total_rcaf'=> 'required|numeric',
-            'total_feature_fee'=> 'required|numeric',
-            'total_feature_time'=> 'required|numeric',
+            'total_cfp' => 'required|numeric',
+            'total_rcaf' => 'required|numeric',
+            'total_feature_fee' => 'required|numeric',
+            'total_feature_time' => 'required|numeric',
             'working_hour_per_day' => 'required|numeric|min:1',
             'development_cost_per_day' => 'required|numeric|min:1',
             'line_of_code_per_day' => 'required|numeric|min:1',
@@ -62,8 +62,6 @@ class ProjectController extends Controller
             'features' => 'required|array',
             'features.*' => 'exists:features,feature_id',
         ]);
-
-        // buat project
         $project = Project::create($validatedData);
 
         // hubungkan fitur
@@ -89,15 +87,15 @@ class ProjectController extends Controller
             'user_id' => 'required|exists:users,id',
             'project_name' => 'required|string|max:255',
             'initial_project_fee' => 'required|numeric|min:0',
-            'final_project_fee'=> 'required|numeric',
+            'final_project_fee' => 'required|numeric',
             'initial_project_time' => 'required|numeric',
-            'final_project_time'=> 'required|numeric',
-            'description'=>'required|string',
+            'final_project_time' => 'required|numeric',
+            'description' => 'required|string',
             'status' => 'required|in:in_progress,complete',
-            'total_cfp'=> 'required|numeric',
-            'total_rcaf'=> 'required|numeric',
-            'total_feature_fee'=> 'required|numeric',
-            'total_feature_time'=> 'required|numeric',
+            'total_cfp' => 'required|numeric',
+            'total_rcaf' => 'required|numeric',
+            'total_feature_fee' => 'required|numeric',
+            'total_feature_time' => 'required|numeric',
             'working_hour_per_day' => 'required|numeric|min:1',
             'development_cost_per_day' => 'required|numeric|min:1',
             'line_of_code_per_day' => 'required|numeric|min:1',

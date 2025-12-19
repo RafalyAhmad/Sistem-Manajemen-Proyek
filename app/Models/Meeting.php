@@ -9,11 +9,11 @@ class Meeting extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'meeting_id'; 
+    protected $primaryKey = 'meeting_id';
 
     protected $fillable = [
         'user_id',
-        'project_id', 
+        'project_id',
         'title',
         'description',
         'notulensi',
@@ -25,11 +25,9 @@ class Meeting extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function project()
     {
         return $this->belongsTo(Project::class, 'project_id', 'project_id');
     }
-
-    
-
 }

@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('feature_project', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('project_id');
-    $table->foreignId('feature_id');
-    $table->timestamps();
-});
+            $table->id();
+            $table->foreignId('project_id');
+            $table->foreignId('feature_id');
+            $table->enum('status', ['to_do', 'in_progress', 'done'])->default('to_do');
+            $table->timestamps();
+        });
 
     }
 

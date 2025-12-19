@@ -9,7 +9,8 @@ class Feature extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'feature_id'; 
+    protected $primaryKey = 'feature_id';
+
     protected $fillable = [
         'project_id',
         'feature_name',
@@ -34,10 +35,7 @@ class Feature extends Model
 
     // Hubungan ke User (Foreign Key user_id)
     public function projects()
-{
-    return $this->belongsToMany(Project::class, 'feature_project', 'feature_id', 'project_id');
-}
-
-
-   
+    {
+        return $this->belongsToMany(Project::class, 'feature_project', 'feature_id', 'project_id');
+    }
 }

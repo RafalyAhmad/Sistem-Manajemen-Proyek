@@ -9,7 +9,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'project_id'; 
+    protected $primaryKey = 'project_id';
 
     protected $fillable = [
         'user_id',
@@ -37,8 +37,7 @@ class Project extends Model
     }
 
     public function features()
-{
-    return $this->belongsToMany(Feature::class, 'feature_project', 'project_id', 'feature_id');
-}
-
+    {
+        return $this->belongsToMany(Feature::class, 'feature_project', 'project_id', 'feature_id');
+    }
 }
