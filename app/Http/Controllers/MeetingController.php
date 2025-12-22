@@ -7,6 +7,9 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MeetingInvitationMail;
+
 
 class MeetingController extends Controller
 {
@@ -39,7 +42,11 @@ class MeetingController extends Controller
             'email_to' => 'required|string|max:255',
         ]);
 
-        Meeting::create($validatedData);
+$meeting = Meeting::create($validatedData);
+        // KIRIM EMAIL
+    Mail::to($validatedData['email_to'])
+        ->send(new MeetingInvitationMail($meeting));
+
 
         return redirect()->back()->with('success', 'berhasil ditambahkan.');
     }

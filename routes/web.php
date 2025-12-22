@@ -67,6 +67,9 @@ Route::get('/contracts', [ContractController::class, 'index']);
 Route::post('/contracts', [ContractController::class, 'store']);
 Route::put('/contracts/{contract}', [ContractController::class, 'update']);
 Route::delete('/contracts/{contract}', [ContractController::class, 'destroy']);
+Route::get('/contracts/{contract}/pdf', [ContractController::class, 'generatePdf'])
+    ->name('contracts.pdf');
+
 
 // Project Board
 Route::get('/project-boards', [ContractController::class, 'index']);

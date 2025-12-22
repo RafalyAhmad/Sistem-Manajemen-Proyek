@@ -177,6 +177,15 @@ export default function ContractManagement() {
                                         Hapus
                                     </button>
                                 </td>
+                                <td>
+                                    <a
+                                        href={route('contracts.pdf', m.contract_id)}
+                                        target="_blank"
+                                        className="bg-red-600 text-white px-3 py-1 rounded"
+                                        >
+                                        Download PDF
+                                        </a>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

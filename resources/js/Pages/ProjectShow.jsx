@@ -28,6 +28,8 @@ export default function Show({ project }) {
                             <tr className="bg-gray-100">
                                 <th className="border p-2">No</th>
                                 <th className="border p-2">Nama Fitur</th>
+                                <th className="border p-2">Status Fitur</th>
+                                <th className="border p-2">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,6 +38,9 @@ export default function Show({ project }) {
                                     <td className="border p-2">{index + 1}</td>
                                     <td className="border p-2">
                                         {feature.feature_name}
+                                    </td>
+                                    <td className="border p-2">
+                                        {feature.pivot.status}
                                     </td>
                                 </tr>
                             ))}
