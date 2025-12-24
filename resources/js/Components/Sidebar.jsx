@@ -75,13 +75,13 @@ export default function Sidebar({ showing, toggle }) {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="w-5 h-5"
+            className="w-5 h-5"
         >
             <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
             />
         </svg>
@@ -92,13 +92,13 @@ export default function Sidebar({ showing, toggle }) {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="w-5 h-5"
+            className="w-5 h-5"
         >
             <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
             />
         </svg>
@@ -109,13 +109,13 @@ export default function Sidebar({ showing, toggle }) {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="w-5 h-5"
+            className="w-5 h-5"
         >
             <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
             />
         </svg>
@@ -126,13 +126,13 @@ export default function Sidebar({ showing, toggle }) {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="w-5 h-5"
+            className="w-5 h-5"
         >
             <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"
             />
         </svg>
@@ -149,7 +149,7 @@ export default function Sidebar({ showing, toggle }) {
         `}
         >
             {/* Menu Utama */}
-            <SidebarSection title="General">
+            <SidebarSection title="Project Management">
                 <SidebarItem
                     href={route("dashboard")}
                     active={route().current("dashboard")}
@@ -158,11 +158,32 @@ export default function Sidebar({ showing, toggle }) {
                     Dashboard
                 </SidebarItem>
                 <SidebarItem
-                    href={route("profile.edit")}
-                    active={route().current("profile.edit")}
+                    href={route("projects.index")}
+                    active={route().current("projects.index")}
                     icon={<ProjectsIcon />}
                 >
                     Projects
+                </SidebarItem>
+                <SidebarItem
+                    href={route("features.index")}
+                    active={route().current("features.index")}
+                    icon={<ProjectsIcon />}
+                >
+                    Project Board
+                </SidebarItem>
+                <SidebarItem
+                    href={route("features.index")}
+                    active={route().current("features.index")}
+                    icon={<ProjectsIcon />}
+                >
+                    Project Timeline
+                </SidebarItem>
+                <SidebarItem
+                    href={route("tickets")}
+                    active={route().current("tickets")}
+                    icon={<TicketsIcon />}
+                >
+                    Tickets
                 </SidebarItem>
                 <SidebarItem
                     href={route("notifications")}
@@ -171,48 +192,37 @@ export default function Sidebar({ showing, toggle }) {
                 >
                     Notifications
                 </SidebarItem>
+                <SidebarItem
+                    href={route("meetings.index")}
+                    active={route().current("meetings.index")}
+                    icon={<ProjectsIcon />}
+                >
+                    Meetings
+                </SidebarItem>
+                <SidebarItem
+                    href={route("contracts.index")}
+                    active={route().current("contracts.index")}
+                    icon={<ProjectsIcon />}
+                >
+                    Contracts
+                </SidebarItem>
             </SidebarSection>
 
             {/* Bagian Settings */}
             <SidebarSection title="Settings">
                 <SidebarItem
-                    href={route("profile.edit")}
-                    active={route().current("profile.edit")}
+                    href={route("features.index")}
+                    active={route().current("features.index")}
                     icon={<ProjectsIcon />}
                 >
-                    Projects
+                    Feature Repository
                 </SidebarItem>
                 <SidebarItem
-                    href={route("users")}
-                    active={route().current("users")}
+                    href={route("users.index")}
+                    active={route().current("users.index")}
                     icon={<UsersIcon />}
                 >
                     Users
-                </SidebarItem>
-                <SidebarItem
-                    href={route("settings")}
-                    active={route().current("settings")}
-                    icon={<GeneralSettingsIcon />}
-                >
-                    General Settings
-                </SidebarItem>
-            </SidebarSection>
-
-            {/* Bagian Project Management */}
-            <SidebarSection title="Project Management">
-                <SidebarItem
-                    href={route("profile.edit")}
-                    active={route().current("profile.edit")}
-                    icon={<ProjectsIcon />}
-                >
-                    Projects
-                </SidebarItem>
-                <SidebarItem
-                    href={route("tickets")}
-                    active={route().current("tickets")}
-                    icon={<TicketsIcon />}
-                >
-                    Tickets
                 </SidebarItem>
             </SidebarSection>
         </div>

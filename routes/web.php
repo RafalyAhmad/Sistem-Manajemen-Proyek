@@ -27,9 +27,9 @@ Route::get('/notifications', function () {
     return Inertia::render('Notifications');
 })->middleware(['auth', 'verified'])->name('notifications');
 
-Route::get('/users', function () {
-    return Inertia::render('Users');
-})->middleware(['auth', 'verified'])->name('users');
+// Route::get('/users', function () {
+//     return Inertia::render('Users');
+// })->middleware(['auth', 'verified'])->name('users');
 
 Route::get('/settings', function () {
     return Inertia::render('GeneralSettings');
@@ -50,35 +50,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // User control
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/users', [UserController::class, 'store']);
-Route::put('/users/{id}', [UserController::class, 'update']);
-Route::delete('/users/{id}', [UserController::class, 'destroy']);
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
 // Project control
-Route::get('/projects', [ProjectController::class, 'index']);
-Route::get('/projects/{project}', [ProjectController::class, 'show']);
-Route::post('/projects', [ProjectController::class, 'store']);
-Route::put('/projects/{project}', [ProjectController::class, 'update']);
-Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
-
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
+Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 // Feature control
-Route::get('/features', [FeatureController::class, 'index']);
-Route::post('/features', [FeatureController::class, 'store']);
-Route::put('/features/{feature}', [FeatureController::class, 'update']);
-Route::delete('/features/{feature}', [FeatureController::class, 'destroy']);
+Route::get('/features', [FeatureController::class, 'index'])->name('features.index');
+Route::post('/features', [FeatureController::class, 'store'])->name('features.store');
+Route::put('/features/{feature}', [FeatureController::class, 'update'])->name('features.update');
+Route::delete('/features/{feature}', [FeatureController::class, 'destroy'])->name('features.destroy');
 
 // Meeting control
-Route::get('/meetings', [MeetingController::class, 'index']);
-Route::post('/meetings', [MeetingController::class, 'store']);
-Route::put('/meetings/{meeting}', [MeetingController::class, 'update']);
-Route::delete('/meetings/{meeting}', [MeetingController::class, 'destroy']);
+Route::get('/meetings', [MeetingController::class, 'index'])->name('meetings.index');
+Route::post('/meetings', [MeetingController::class, 'store'])->name('meetings.store');
+Route::put('/meetings/{meeting}', [MeetingController::class, 'update'])->name('meetings.update');
+Route::delete('/meetings/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
 
 // Contract control
-Route::get('/contracts', [ContractController::class, 'index']);
-Route::post('/contracts', [ContractController::class, 'store']);
-Route::put('/contracts/{contract}', [ContractController::class, 'update']);
-Route::delete('/contracts/{contract}', [ContractController::class, 'destroy']);
+Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.index');
+Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
+Route::put('/contracts/{contract}', [ContractController::class, 'update'])->name('contracts.update');
+Route::delete('/contracts/{contract}', [ContractController::class, 'destroy'])->name('contracts.destroy');
 Route::get('/contracts/{contract}/pdf', [ContractController::class, 'generatePdf'])
     ->name('contracts.pdf');
 
