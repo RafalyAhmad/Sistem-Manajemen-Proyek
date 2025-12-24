@@ -10,16 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
-                    <br> Dashboard
-                    <br> Projects
-                    <br> Notification
-                    <br> Meeting
-                    <br> Contract
-                    <br> Users
-                    <br> General
-                    <br> Project Board
-                    <br> Project Timeline
-                    <br> Vote
+
                 </div>
             </div>
         </div>
