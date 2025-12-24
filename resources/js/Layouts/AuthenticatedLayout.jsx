@@ -22,14 +22,14 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 <main className="flex-1 sm:ml-64 p-4">
                     {header && (
-                        <div className="max-w-7xl mx-auto mb-6">
-                            <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                        <div className="mx-auto mb-4">
+                            <div className="flex justify-between items-start flex-wrap gap-4">
                                 {header}
-                            </h2>
+                            </div>
                         </div>
                     )}
 
-                    <div className="max-w-7xl mx-auto">{children}</div>
+                    <div className="mx-auto">{children}</div>
                 </main>
             </div>
             {showingSidebar && (

@@ -5,13 +5,13 @@ import {
     useRef,
     useState,
 } from "react";
+import BasicInput from "./BasicInput";
 
 export default forwardRef(function TextInput(
-    { type = "text", className = "", isFocused = false, label = "", ...props }, // <-- Tambahkan 'label'
+    { type = "text", className = "", isFocused = false, label = "", ...props },
     ref
 ) {
     const localRef = useRef(null);
-    // Tambahkan state untuk melacak apakah input sedang fokus atau memiliki nilai
     const [isInputFocused, setIsInputFocused] = useState(false);
     const [inputValue, setInputValue] = useState(props.value || "");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -26,12 +26,10 @@ export default forwardRef(function TextInput(
         }
     }, [isFocused]);
 
-    // Sinkronkan perubahan nilai dari luar komponen (misalnya dari Inertia form data)
     useEffect(() => {
         setInputValue(props.value || "");
     }, [props.value]);
 
-    // Tentukan apakah label harus 'mengapung' di atas
     const shouldFloat = isInputFocused || inputValue;
 
     // Tentukan type input yang sebenarnya:
@@ -43,19 +41,18 @@ export default forwardRef(function TextInput(
         setIsPasswordVisible((prev) => !prev);
     };
 
+    const baseInputType = type === "password" ? inputType : type;
+
     return (
-        // Wrapper relatif untuk positioning absolut label
         <div className="relative">
-            {/* LABEL Terapung */}
             <label
                 htmlFor={props.id || props.name}
-                // Tailwind untuk animasi: transition duration-300 ease-in-out
                 className={`
                     absolute left-3 transition-all duration-300 ease-in-out cursor-text
                     ${
                         shouldFloat
-                            ? "text-xs text-gray-500 top-[-10px] bg-white px-1" // Posisi Mengapung
-                            : "text-base text-gray-500 top-3" // Posisi Default (di dalam input)
+                            ? "text-xs text-gray-500 top-[-10px] bg-white px-1"
+                            : "text-base text-gray-500 top-3"
                     }
                 `}
                 onClick={() => localRef.current?.focus()}
@@ -63,36 +60,25 @@ export default forwardRef(function TextInput(
                 {label}
             </label>
 
-            {/* INPUT FIELD */}
-            <input
+            <BasicInput
                 {...props}
-                id={props.id || props.name} // Wajib ada ID/Name untuk dihubungkan dengan label
-                type={inputType}
+                id={props.id || props.name}
+                type={baseInputType}
                 ref={localRef}
-                value={inputValue} // Gunakan state lokal
-                // Styling input
-                className={`
-                    w-full rounded-md border-gray-300 shadow-sm transition-all duration-300 ease-in-out 
-                    focus:border-[#db2727] focus:ring-[#db2727]
-                    py-3 px-3 ${type === "password" ? "pe-10" : ""} 
-                    ${className}
-                `}
-                // className={
-                //     "w-full rounded-md border-gray-300 shadow-sm transition-all duration-300 ease-in-out " +
-                //     "focus:border-[#db2727] focus:ring-[#db2727] " +
-                //     "py-3 px-3 " + // Tambahkan padding agar label memiliki ruang
-                //     className
-                // }
-                // Event Handlers untuk mengatur state fokus dan nilai
+                value={inputValue}
+                className={
+                    `py-3 px-3 ` +
+                    `${type === "password" ? "pe-10" : ""}` +
+                    `${className}`
+                }
                 onFocus={() => setIsInputFocused(true)}
                 onBlur={() => setIsInputFocused(false)}
                 onChange={(e) => {
                     setInputValue(e.target.value);
-                    props.onChange && props.onChange(e); // Panggil handler onChange asli
+                    props.onChange && props.onChange(e);
                 }}
             />
 
-            {/* 3. TOMBOL SHOW/HIDE */}
             {type === "password" && (
                 <button
                     type="button"

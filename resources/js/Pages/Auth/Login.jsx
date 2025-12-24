@@ -2,7 +2,7 @@ import Buttons from "@/Components/Buttons";
 import Checkbox from "@/Components/Checkbox";
 import InputError from "@/Components/InputError";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import TextInput from "@/Components/TextInput";
+import TextInput from "@/Components/FloatingLabelInput";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
@@ -132,7 +132,7 @@ export default function Login({ status, canResetPassword }) {
                                 onClick={submit}
                                 disabled={processing}
                             >
-                                LOG IN
+                                Log in
                             </Buttons>
                         </div>
                     </form>

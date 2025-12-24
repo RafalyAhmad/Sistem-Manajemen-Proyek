@@ -5,6 +5,7 @@ const Buttons = ({
     onClick,
     type = "button",
     variant = "primary", // 'primary', 'info', 'success'
+    icon = null,
     disabled = false,
     className = "",
 }) => {
@@ -17,6 +18,7 @@ const Buttons = ({
         info: "text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400",
         success:
             "text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400",
+        dark: "text-white bg-gray-800 hover:bg-gray-600 disabled:bg-gray-400",
     };
 
     const variantClasses = variantStyles[variant] || variantStyles.secondary;
@@ -28,6 +30,7 @@ const Buttons = ({
             disabled={disabled}
             className={`${baseClasses} ${variantClasses} ${className}`}
         >
+            {icon && <span className="h-5 w-5">{icon}</span>}
             {children}
         </button>
     );
