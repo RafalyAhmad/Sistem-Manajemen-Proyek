@@ -4,10 +4,10 @@ use App\Http\Controllers\ContractController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ProjectBoardController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -45,7 +45,6 @@ Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index'
 Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
 Route::put('/tickets/{id}', [TicketController::class, 'update'])->name('tickets.update');
 Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -91,5 +90,8 @@ Route::get('/contracts/{contract}/pdf', [ContractController::class, 'generatePdf
 
 // Project Board
 Route::get('/project-board', [ProjectBoardController::class, 'index'])->name('project.board');
+Route::patch('/project-board/{project}/features/{feature}/status', [ProjectBoardController::class, 'updateStatus'])->name('project.board.update-status');
+Route::delete('project-board/{project}/features/{feature}', [ProjectBoardController::class, 'destroy'])->name('project.board.destroy');
+Route::post('/project-board/{project}/features', [ProjectBoardController::class, 'addFeature'])->name('project.board.add');
 
 require __DIR__.'/auth.php';

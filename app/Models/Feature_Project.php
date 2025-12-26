@@ -17,5 +17,7 @@ class Feature_Project extends Model
         'project_id',
         'feature_id',
         'status',
+        'added_type',
+        'fp_adjustment',
     ];
 }

@@ -36,6 +36,7 @@ class Feature extends Model
     // Hubungan ke User (Foreign Key user_id)
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'feature_project', 'feature_id', 'project_id')->withpivot('status');
+        return $this->belongsToMany(Project::class, 'feature_project', 'feature_id', 'project_id')
+        ->withpivot('status', 'added_type', 'fp_adjustment');
     }
 }

@@ -44,6 +44,8 @@ class ProjectSeeder extends Seeder
                 'status' => 'to_do',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'added_type' => 'baseline',
+                'fp_adjustment' => 0,
             ]);
         }
     }

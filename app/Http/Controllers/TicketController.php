@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Project;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Models\Project;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TicketController extends Controller
-{  
- public function index()
+{
+    public function index()
     {
         $ticket = Ticket::with('user', 'project')->get();
 
@@ -74,6 +75,4 @@ class TicketController extends Controller
 
         return redirect()->back()->with('success', 'ticket berhasil dihapus.');
     }
- };
-
-
+}

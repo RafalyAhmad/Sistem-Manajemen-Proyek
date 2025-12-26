@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('project_id');
             $table->foreignId('feature_id');
             $table->enum('status', ['to_do', 'in_progress', 'done'])->default('to_do');
+            $table->enum('added_type', ['baseline', 'change']);
+            $table->integer('fp_adjustment');
             $table->timestamps();
         });
 

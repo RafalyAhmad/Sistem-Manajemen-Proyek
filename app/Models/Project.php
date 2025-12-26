@@ -38,6 +38,7 @@ class Project extends Model
 
     public function features()
     {
-        return $this->belongsToMany(Feature::class, 'feature_project', 'project_id', 'feature_id')->withpivot('status');
+        return $this->belongsToMany(Feature::class, 'feature_project', 'project_id', 'feature_id')
+        ->withpivot('status', 'added_type', 'fp_adjustment');
     }
 }

@@ -66,6 +66,15 @@ class ProjectController extends Controller
 
         // hubungkan fitur
         $project->features()->sync($request->features);
+        foreach ($request->features as $featureId) {
+    $project->features()->attach($featureId, [
+        'status' => 'to_do',
+        'fp_adjustment' => 0,
+        'added_type' => 'baseline',
+        'added_at' => now(),
+    ]);
+}
+
 
         // return Redirect::route('projects.index')->with('success', 'Project berhasil ditambahkan.');
     }
