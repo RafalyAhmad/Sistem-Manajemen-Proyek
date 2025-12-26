@@ -1,23 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Mail\MeetingInvitationMail;
-use App\Models\Meeting;
-use App\Models\Project;
+use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
-class MeetingController extends Controller
-{
-    public function index()
+class TicketController extends Controller
+{  
+ public function index()
     {
-        $meetings = Meeting::with('user', 'project')->get();
+        $ticket = Ticket::with('user', 'project')->get();
 
-        return Inertia::render('MeetingManagement', [
-            'meetings' => $meetings,
+        return Inertia::render('Tickets', [
+            'tickets' => $ticket,
             'user' => User::select('id', 'name')->get(),
             'project' => Project::select('project_id', 'project_name')->get(),
         ]);
@@ -26,7 +23,7 @@ class MeetingController extends Controller
     // CREATE
     public function create()
     {
-        return Inertia::render('Meetings');
+        return Inertia::render('Tickets');
     }
 
     public function store(Request $request)
@@ -37,28 +34,23 @@ class MeetingController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'notulensi' => 'required|string|max:255',
-            'meeting_time' => 'required|date',
-            'email_to' => 'required|string|max:255',
+            'status' => 'required|in:live,approve,decline',
+            'timestamp' => 'required|date',
         ]);
 
-        $meeting = Meeting::create($validatedData);
-        // KIRIM EMAIL
-        Mail::to($validatedData['email_to'])
-            ->send(new MeetingInvitationMail($meeting));
-
-        return redirect()->back()->with('success', 'berhasil ditambahkan.');
+        $ticket = Ticket::create($validatedData);
     }
 
     // UPDATE (Tampilkan form untuk mengedit)
-    public function edit(Meeting $meeting)
+    public function edit(Ticket $ticket)
     {
-        return Inertia::render('meeting/Edit', [
-            'meeting' => $meeting,
+        return Inertia::render('Tickets/Edit', [
+            'ticket' => $ticket,
         ]);
     }
 
     // UPDATE (Simpan perubahan data)
-    public function update(Request $request, Meeting $meeting)
+    public function update(Request $request, Ticket $ticket)
     {
         $validatedData = $request->validate([
             'project_id' => 'required|exists:projects,project_id',
@@ -66,20 +58,22 @@ class MeetingController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'notulensi' => 'required|string|max:255',
-            'meeting_time' => 'required|date',
-            'email_to' => 'required|string|max:255',
+            'status' => 'required|in:live,approved,declined',
+            'timestamp' => 'required|date',
         ]);
 
-        $meeting->update($validatedData);
+        $ticket->update($validatedData);
 
         return redirect()->back()->with('success', 'berhasil diperbarui.');
     }
 
     // DELETE (Hapus data)
-    public function destroy(Meeting $meeting)
+    public function destroy(Ticket $ticket)
     {
-        $meeting->delete();
+        $ticket->delete();
 
-        return redirect()->back()->with('success', 'meeting berhasil dihapus.');
+        return redirect()->back()->with('success', 'ticket berhasil dihapus.');
     }
-}
+ };
+
+

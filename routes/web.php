@@ -6,6 +6,8 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\ProjectBoardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -38,6 +40,12 @@ Route::get('/settings', function () {
 Route::get('/tickets', function () {
     return Inertia::render('Tickets');
 })->middleware(['auth', 'verified'])->name('tickets');
+
+Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
+Route::put('/tickets/{id}', [TicketController::class, 'update'])->name('tickets.update');
+Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -81,9 +89,7 @@ Route::delete('/contracts/{contract}', [ContractController::class, 'destroy'])->
 Route::get('/contracts/{contract}/pdf', [ContractController::class, 'generatePdf'])
     ->name('contracts.pdf');
 
-
 // Project Board
-Route::get('/project-boards', [ContractController::class, 'index']);
-Route::post('/project-boards', [ContractController::class, 'store']);
+Route::get('/project-board', [ProjectBoardController::class, 'index'])->name('project.board');
 
 require __DIR__.'/auth.php';

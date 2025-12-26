@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Contract;
 use App\Models\Project;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ContractController extends Controller
 {
@@ -44,18 +44,18 @@ class ContractController extends Controller
         return redirect()->back()->with('success', 'berhasil ditambahkan.');
     }
 
-     public function generatePdf(Contract $contract)
-{
-    $contract->load('user', 'project');
+    public function generatePdf(Contract $contract)
+    {
+        $contract->load('user', 'project');
 
-    $pdf = Pdf::loadView('contracts.pdf', [
-        'contract' => $contract
-    ]);
+        $pdf = Pdf::loadView('contracts.pdf', [
+            'contract' => $contract,
+        ]);
 
-    // return $pdf->download('kontrak-' . $contract->contract_number . '.pdf');
-    return $pdf->stream('kontrak.pdf');
+        // return $pdf->download('kontrak-' . $contract->contract_number . '.pdf');
+        return $pdf->stream('kontrak.pdf');
 
-}
+    }
 
     // UPDATE (Tampilkan form untuk mengedit)
     public function edit(Contract $contract)

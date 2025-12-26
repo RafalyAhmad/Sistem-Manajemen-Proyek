@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm, usePage } from "@inertiajs/react";
-import SidebarLayout from "@/Layouts/SidebarLayout";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import Widget from "@/Components/Widget";
 
 export default function FeatureManagement() {
     const { features, projects } = usePage().props;
@@ -153,261 +154,273 @@ export default function FeatureManagement() {
     };
 
     return (
-        <SidebarLayout>
-            <h1 className="text-2xl font-bold mb-6">Feature Management</h1>
+        <AuthenticatedLayout>
+            <Widget>
+                <h1 className="text-2xl font-bold mb-6">Feature Management</h1>
 
-            <form onSubmit={submit} className="grid grid-cols-2 gap-4 mb-8">
-                <select
-                    value={data.project_id}
-                    onChange={(e) => setData("project_id", e.target.value)}
-                    className="border p-2 rounded col-span-2"
-                >
-                    <option value="">-- Pilih Project --</option>
-                    {projects.map((p) => (
-                        <option key={p.project_id} value={p.project_id}>
-                            {p.project_name}
-                        </option>
-                    ))}
-                </select>
+                <form onSubmit={submit} className="grid grid-cols-2 gap-4 mb-8">
+                    <select
+                        value={data.project_id}
+                        onChange={(e) => setData("project_id", e.target.value)}
+                        className="border p-2 rounded col-span-2"
+                    >
+                        <option value="">-- Pilih Project --</option>
+                        {projects.map((p) => (
+                            <option key={p.project_id} value={p.project_id}>
+                                {p.project_name}
+                            </option>
+                        ))}
+                    </select>
 
-                <input
-                    type="text"
-                    placeholder="Nama Fitur"
-                    value={data.feature_name}
-                    onChange={(e) => setData("feature_name", e.target.value)}
-                    className="border p-2 rounded col-span-2"
-                />
+                    <input
+                        type="text"
+                        placeholder="Nama Fitur"
+                        value={data.feature_name}
+                        onChange={(e) =>
+                            setData("feature_name", e.target.value)
+                        }
+                        className="border p-2 rounded col-span-2"
+                    />
 
-                <input
-                    type="text"
-                    placeholder="Deskripsi"
-                    value={data.description}
-                    onChange={(e) => setData("description", e.target.value)}
-                    className="border p-2 rounded col-span-2"
-                />
+                    <input
+                        type="text"
+                        placeholder="Deskripsi"
+                        value={data.description}
+                        onChange={(e) => setData("description", e.target.value)}
+                        className="border p-2 rounded col-span-2"
+                    />
 
-                <input
-                    type="number"
-                    placeholder="Bobot External Input"
-                    value={weightEI}
-                    onChange={(e) => {
-                        setWeightEI(e.target.value);
-                        calculateExternalInput(e.target.value, levelEI);
-                    }}
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Bobot External Input"
+                        value={weightEI}
+                        onChange={(e) => {
+                            setWeightEI(e.target.value);
+                            calculateExternalInput(e.target.value, levelEI);
+                        }}
+                        className="border p-2 rounded"
+                    />
 
-                <select
-                    value={levelEI}
-                    onChange={(e) => {
-                        setLevelEI(e.target.value);
-                        calculateExternalInput(weightEI, e.target.value);
-                    }}
-                    className="border p-2 rounded"
-                >
-                    <option value="">-- Pilih Kompleksitas --</option>
-                    <option value="3">Mudah</option>
-                    <option value="4">Medium</option>
-                    <option value="6">Sulit</option>
-                </select>
+                    <select
+                        value={levelEI}
+                        onChange={(e) => {
+                            setLevelEI(e.target.value);
+                            calculateExternalInput(weightEI, e.target.value);
+                        }}
+                        className="border p-2 rounded"
+                    >
+                        <option value="">-- Pilih Kompleksitas --</option>
+                        <option value="3">Mudah</option>
+                        <option value="4">Medium</option>
+                        <option value="6">Sulit</option>
+                    </select>
 
-                <input
-                    type="number"
-                    placeholder="Bobot External Output"
-                    value={weightEO}
-                    onChange={(e) => {
-                        setWeightEO(e.target.value);
-                        calculateExternalOutput(e.target.value, levelEO);
-                    }}
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Bobot External Output"
+                        value={weightEO}
+                        onChange={(e) => {
+                            setWeightEO(e.target.value);
+                            calculateExternalOutput(e.target.value, levelEO);
+                        }}
+                        className="border p-2 rounded"
+                    />
 
-                <select
-                    value={levelEO}
-                    onChange={(e) => {
-                        setLevelEO(e.target.value);
-                        calculateExternalOutput(weightEO, e.target.value);
-                    }}
-                    className="border p-2 rounded"
-                >
-                    <option value="">-- Pilih Kompleksitas --</option>
-                    <option value="4">Mudah</option>
-                    <option value="5">Medium</option>
-                    <option value="7">Sulit</option>
-                </select>
+                    <select
+                        value={levelEO}
+                        onChange={(e) => {
+                            setLevelEO(e.target.value);
+                            calculateExternalOutput(weightEO, e.target.value);
+                        }}
+                        className="border p-2 rounded"
+                    >
+                        <option value="">-- Pilih Kompleksitas --</option>
+                        <option value="4">Mudah</option>
+                        <option value="5">Medium</option>
+                        <option value="7">Sulit</option>
+                    </select>
 
-                <input
-                    type="number"
-                    placeholder="Bobot LIF"
-                    value={weightLIF}
-                    onChange={(e) => {
-                        setWeightLIF(e.target.value);
-                        calculateLogicalInternalFile(e.target.value, levelLIF);
-                    }}
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Bobot LIF"
+                        value={weightLIF}
+                        onChange={(e) => {
+                            setWeightLIF(e.target.value);
+                            calculateLogicalInternalFile(
+                                e.target.value,
+                                levelLIF
+                            );
+                        }}
+                        className="border p-2 rounded"
+                    />
 
-                <select
-                    value={levelLIF}
-                    onChange={(e) => {
-                        setLevelLIF(e.target.value);
-                        calculateLogicalInternalFile(weightLIF, e.target.value);
-                    }}
-                    className="border p-2 rounded"
-                >
-                    <option value="">-- Pilih Kompleksitas --</option>
-                    <option value="7">Mudah</option>
-                    <option value="10">Medium</option>
-                    <option value="15">Sulit</option>
-                </select>
+                    <select
+                        value={levelLIF}
+                        onChange={(e) => {
+                            setLevelLIF(e.target.value);
+                            calculateLogicalInternalFile(
+                                weightLIF,
+                                e.target.value
+                            );
+                        }}
+                        className="border p-2 rounded"
+                    >
+                        <option value="">-- Pilih Kompleksitas --</option>
+                        <option value="7">Mudah</option>
+                        <option value="10">Medium</option>
+                        <option value="15">Sulit</option>
+                    </select>
 
-                <input
-                    type="number"
-                    placeholder="Bobot EIF"
-                    value={weightEIF}
-                    onChange={(e) => {
-                        setWeightEIF(e.target.value);
-                        calculateExternalInterfaceFile(
-                            e.target.value,
-                            levelEIF
-                        );
-                    }}
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Bobot EIF"
+                        value={weightEIF}
+                        onChange={(e) => {
+                            setWeightEIF(e.target.value);
+                            calculateExternalInterfaceFile(
+                                e.target.value,
+                                levelEIF
+                            );
+                        }}
+                        className="border p-2 rounded"
+                    />
 
-                <select
-                    value={levelEIF}
-                    onChange={(e) => {
-                        setLevelEIF(e.target.value);
-                        calculateExternalInterfaceFile(
-                            weightEIF,
-                            e.target.value
-                        );
-                    }}
-                    className="border p-2 rounded"
-                >
-                    <option value="">-- Pilih Kompleksitas --</option>
-                    <option value="5">Mudah</option>
-                    <option value="7">Medium</option>
-                    <option value="10">Sulit</option>
-                </select>
+                    <select
+                        value={levelEIF}
+                        onChange={(e) => {
+                            setLevelEIF(e.target.value);
+                            calculateExternalInterfaceFile(
+                                weightEIF,
+                                e.target.value
+                            );
+                        }}
+                        className="border p-2 rounded"
+                    >
+                        <option value="">-- Pilih Kompleksitas --</option>
+                        <option value="5">Mudah</option>
+                        <option value="7">Medium</option>
+                        <option value="10">Sulit</option>
+                    </select>
 
-                <input
-                    type="number"
-                    placeholder="Bobot External Inquiry"
-                    value={weightEQ}
-                    onChange={(e) => {
-                        setWeightEQ(e.target.value);
-                        calculateExternalInquiry(e.target.value, levelEQ);
-                    }}
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Bobot External Inquiry"
+                        value={weightEQ}
+                        onChange={(e) => {
+                            setWeightEQ(e.target.value);
+                            calculateExternalInquiry(e.target.value, levelEQ);
+                        }}
+                        className="border p-2 rounded"
+                    />
 
-                <select
-                    value={levelEQ}
-                    onChange={(e) => {
-                        setLevelEQ(e.target.value);
-                        calculateExternalInquiry(weightEQ, e.target.value);
-                    }}
-                    className="border p-2 rounded"
-                >
-                    <option value="">-- Pilih Kompleksitas --</option>
-                    <option value="3">Mudah</option>
-                    <option value="4">Medium</option>
-                    <option value="6">Sulit</option>
-                </select>
+                    <select
+                        value={levelEQ}
+                        onChange={(e) => {
+                            setLevelEQ(e.target.value);
+                            calculateExternalInquiry(weightEQ, e.target.value);
+                        }}
+                        className="border p-2 rounded"
+                    >
+                        <option value="">-- Pilih Kompleksitas --</option>
+                        <option value="3">Mudah</option>
+                        <option value="4">Medium</option>
+                        <option value="6">Sulit</option>
+                    </select>
 
-                <input
-                    type="number"
-                    placeholder="CFP Fitur"
-                    value={data.feature_cfp}
-                    readOnly
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="CFP Fitur"
+                        value={data.feature_cfp}
+                        readOnly
+                        className="border p-2 rounded"
+                    />
 
-                <input
-                    type="number"
-                    placeholder="Initial Fee"
-                    value={data.initial_feature_fee}
-                    onChange={(e) =>
-                        setData("initial_feature_fee", e.target.value)
-                    }
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Initial Fee"
+                        value={data.initial_feature_fee}
+                        onChange={(e) =>
+                            setData("initial_feature_fee", e.target.value)
+                        }
+                        className="border p-2 rounded"
+                    />
 
-                <input
-                    type="number"
-                    placeholder="Final Fee"
-                    value={data.final_feature_fee}
-                    onChange={(e) =>
-                        setData("final_feature_fee", e.target.value)
-                    }
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Final Fee"
+                        value={data.final_feature_fee}
+                        onChange={(e) =>
+                            setData("final_feature_fee", e.target.value)
+                        }
+                        className="border p-2 rounded"
+                    />
 
-                <input
-                    type="number"
-                    placeholder="Initial Time"
-                    value={data.initial_feature_time}
-                    onChange={(e) =>
-                        setData("initial_feature_time", e.target.value)
-                    }
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Initial Time"
+                        value={data.initial_feature_time}
+                        onChange={(e) =>
+                            setData("initial_feature_time", e.target.value)
+                        }
+                        className="border p-2 rounded"
+                    />
 
-                <input
-                    type="number"
-                    placeholder="Final Time"
-                    value={data.final_feature_time}
-                    onChange={(e) =>
-                        setData("final_feature_time", e.target.value)
-                    }
-                    className="border p-2 rounded"
-                />
+                    <input
+                        type="number"
+                        placeholder="Final Time"
+                        value={data.final_feature_time}
+                        onChange={(e) =>
+                            setData("final_feature_time", e.target.value)
+                        }
+                        className="border p-2 rounded"
+                    />
 
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white py-2 px-4 rounded col-span-2"
-                >
-                    {data.feature_id ? "Update Feature" : "Simpan Feature"}
-                </button>
-            </form>
+                    <button
+                        type="submit"
+                        className="bg-blue-600 text-white py-2 px-4 rounded col-span-2"
+                    >
+                        {data.feature_id ? "Update Feature" : "Simpan Feature"}
+                    </button>
+                </form>
 
-            <table className="w-full border">
-                <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border p-2">Nama Feature</th>
-                        <th className="border p-2">Fee</th>
-                        <th className="border p-2">CFP</th>
-                        <th className="border p-2">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {features.map((f) => (
-                        <tr key={f.feature_id}>
-                            <td className="border p-2">{f.feature_name}</td>
-                            <td className="border p-2">
-                                {f.initial_feature_fee}
-                            </td>
-                            <td className="border p-2">{f.feature_cfp}</td>
-                            <td className="border p-2">
-                                <button
-                                    onClick={() => editFeature(f)}
-                                    className="bg-yellow-500 text-white px-3 py-1 mr-2 rounded"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={() => deleteFeature(f.feature_id)}
-                                    className="bg-red-600 text-white px-3 py-1 rounded"
-                                >
-                                    Hapus
-                                </button>
-                            </td>
+                <table className="w-full border">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="border p-2">Nama Feature</th>
+                            <th className="border p-2">Fee</th>
+                            <th className="border p-2">CFP</th>
+                            <th className="border p-2">Aksi</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </SidebarLayout>
+                    </thead>
+                    <tbody>
+                        {features.map((f) => (
+                            <tr key={f.feature_id}>
+                                <td className="border p-2">{f.feature_name}</td>
+                                <td className="border p-2">
+                                    {f.initial_feature_fee}
+                                </td>
+                                <td className="border p-2">{f.feature_cfp}</td>
+                                <td className="border p-2">
+                                    <button
+                                        onClick={() => editFeature(f)}
+                                        className="bg-yellow-500 text-white px-3 py-1 mr-2 rounded"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            deleteFeature(f.feature_id)
+                                        }
+                                        className="bg-red-600 text-white px-3 py-1 rounded"
+                                    >
+                                        Hapus
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </Widget>
+        </AuthenticatedLayout>
     );
 }

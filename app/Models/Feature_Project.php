@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Feature_Project extends Model
 {
-     use HasFactory;
+    use HasFactory;
 
     protected $table = 'feature_project';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [

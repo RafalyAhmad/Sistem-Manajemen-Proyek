@@ -165,8 +165,8 @@ export default function Sidebar({ showing, toggle }) {
                     Projects
                 </SidebarItem>
                 <SidebarItem
-                    href={route("features.index")}
-                    active={route().current("features.index")}
+                    href={route("project.board")}
+                    active={route().current("project.board")}
                     icon={<ProjectsIcon />}
                 >
                     Project Board
@@ -179,8 +179,8 @@ export default function Sidebar({ showing, toggle }) {
                     Project Timeline
                 </SidebarItem>
                 <SidebarItem
-                    href={route("tickets")}
-                    active={route().current("tickets")}
+                    href={route("tickets.index")}
+                    active={route().current("tickets.index")}
                     icon={<TicketsIcon />}
                 >
                     Tickets

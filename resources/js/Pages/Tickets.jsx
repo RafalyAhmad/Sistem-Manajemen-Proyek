@@ -1,108 +1,224 @@
+// import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+// import { Head } from "@inertiajs/react";
+// import TicketCard from "@/Components/TicketCard";
+// import BasicInput from "@/Components/BasicInput";
+import React from "react";
+import { useForm, usePage } from "@inertiajs/react";
+import Widget from "@/Components/Widget";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
-import TicketCard from "@/Components/TicketCard";
-import BasicInput from "@/Components/BasicInput";
 
 export default function Tickets() {
-    const ticketData = {
-        live: [
-            {
-                id: 1,
-                title: "+ Fitur Z",
-                sender: "Client A",
-                date: "1 day left",
-                description:
-                    "Pengajuan penambahan modul pembayaran otomatis menggunakan gateway lokal untuk mempercepat proses transaksi.",
-            },
-        ],
-        approved: [
-            {
-                id: 2,
-                title: "- Fitur X",
-                sender: "Manager B",
-                date: "2 days ago",
-                description:
-                    "Penghapusan fitur legacy chat karena sudah digantikan oleh integrasi Slack yang baru.",
-            },
-        ],
-        declined: [
-            {
-                id: 3,
-                title: "+ Fitur Y",
-                sender: "Dev C",
-                date: "5 days ago",
-                description:
-                    "Pengajuan fitur dark mode otomatis berdasarkan waktu sistem user.",
-            },
-        ],
+    const { tickets, user, project } = usePage().props;
+    const {
+        data,
+        setData,
+        post,
+        put,
+        delete: destroy,
+        reset,
+    } = useForm({
+        ticket_id: "",
+        user_id: "",
+        project_id: "",
+        title: "",
+        description: "",
+        status: "",
+        timestamp: "",
+    });
+
+    const submit = (e) => {
+        e.preventDefault();
+
+        if (data.ticket_id) {
+            put(`/tickets/${data.ticket_id}`, {
+                onSuccess: () => reset(),
+            });
+        } else {
+            post("/tickets", {
+                onSuccess: () => reset(),
+            });
+        }
+    };
+
+    const editTicket = (ticket) => {
+        setData({
+            ticket_id: ticket.ticket_id,
+            user_id: ticket.user_id,
+            project_id: ticket.project_id,
+            title: ticket.title,
+            description: ticket.description,
+            status: ticket.status,
+            timestamp: ticket.timestamp,
+        });
+    };
+
+    const deleteTicket = (ticket_id) => {
+        if (confirm("Yakin ingin menghapus ticket ini?")) {
+            destroy(`/tickets/${ticket_id}`);
+        }
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex flex-col sm:flex-row items-start justify-between w-full gap-4">
-                    <h2 className="text-2xl font-semibold leading-tight text-gray-800">
-                        Tickets
-                    </h2>
-                    <BasicInput
-                        placeholder="Cari Project..."
-                        className="w-full sm:max-w-xs"
-                    />
+        <AuthenticatedLayout>
+            <Widget>
+                {/* FORM */}
+                <form
+                    onSubmit={submit}
+                    className="grid grid-cols-2 gap-4 mb-10"
+                >
+                    <div>
+                        <label className="font-semibold mb-1 block">
+                            User terkait
+                        </label>
+                        <select
+                            className="w-full border rounded px-3 py-2"
+                            value={data.user_id}
+                            onChange={(e) => setData("user_id", e.target.value)}
+                        >
+                            <option value="">-- Pilih User --</option>
+                            {user.map((u) => (
+                                <option key={u.id} value={u.id}>
+                                    {u.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="font-semibold mb-1 block">
+                            Nama Project
+                        </label>
+                        <select
+                            className="w-full border rounded px-3 py-2"
+                            value={data.project_id}
+                            onChange={(e) =>
+                                setData("project_id", e.target.value)
+                            }
+                        >
+                            <option value="">-- Pilih Project --</option>
+                            {project.map((p) => (
+                                <option key={p.project_id} value={p.project_id}>
+                                    {p.project_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="font-semibold mb-1 block">
+                            Judul Tiket
+                        </label>
+                        <input
+                            type="text"
+                            className="border rounded px-3 py-2 w-full"
+                            value={data.title}
+                            onChange={(e) => setData("title", e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="font-semibold mb-1 block">
+                            Deskripsi Tiket
+                        </label>
+                        <input
+                            type="text"
+                            className="border rounded px-3 py-2 w-full"
+                            value={data.description}
+                            onChange={(e) =>
+                                setData("description", e.target.value)
+                            }
+                        />
+                    </div>
+
+                    <div>
+                        <label className="font-semibold mb-1 block">
+                            Status Tiket
+                        </label>
+                        <input
+                            type="text"
+                            className="border rounded px-3 py-2 w-full"
+                            value={data.status}
+                            onChange={(e) => setData("status", e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="font-semibold mb-1 block">
+                            Waktu dibuat
+                        </label>
+                        <input
+                            type="datetime-local"
+                            className="border rounded px-3 py-2 w-full"
+                            value={data.timestamp}
+                            onChange={(e) =>
+                                setData("timestamp", e.target.value)
+                            }
+                        />
+                    </div>
+
+                    <div className="col-span-2">
+                        <button
+                            type="submit"
+                            className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+                        >
+                            {data.ticket_id ? "Update Tiket" : "Tambah Tiket"}
+                        </button>
+                    </div>
+                </form>
+
+                {/* TABLE */}
+                <div className="overflow-x-auto">
+                    <table className="w-full border text-center">
+                        <thead className="bg-gray-200">
+                            <tr>
+                                <th className="p-2 border">User</th>
+                                <th className="p-2 border">Project</th>
+                                <th className="p-2 border">Judul</th>
+                                <th className="p-2 border">Status</th>
+                                <th className="p-2 border">Waktu Kontrak</th>
+                                <th className="p-2 border">Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {tickets.map((t) => (
+                                <tr
+                                    key={t.ticket_id}
+                                    className="hover:bg-gray-50"
+                                >
+                                    <td className="border p-2">
+                                        {t.user?.name}
+                                    </td>
+                                    <td className="border p-2">
+                                        {t.project?.project_name}
+                                    </td>
+                                    <td className="border p-2">{t.title}</td>
+                                    <td className="border p-2">{t.status}</td>
+
+                                    <td className="border p-2 space-x-2">
+                                        <button
+                                            className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                            onClick={() => editTicket(t)}
+                                        >
+                                            Edit
+                                        </button>
+
+                                        <button
+                                            className="bg-red-600 text-white px-3 py-1 rounded"
+                                            onClick={() =>
+                                                deleteTicket(t.ticket_id)
+                                            }
+                                        >
+                                            Hapus
+                                        </button>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-            }
-        >
-            <Head title="Tickets" />
-
-            <div className="space-y-6">
-                {/* Section Live */}
-                <section>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                        <span className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span>
-                        Live Tickets
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {ticketData.live.map((t) => (
-                            <TicketCard
-                                key={t.id}
-                                ticket={t}
-                                statusType="live"
-                            />
-                        ))}
-                    </div>
-                </section>
-
-                {/* Section Approved */}
-                <section>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                        Approved Tickets
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-80">
-                        {ticketData.approved.map((t) => (
-                            <TicketCard
-                                key={t.id}
-                                ticket={t}
-                                statusType="approved"
-                            />
-                        ))}
-                    </div>
-                </section>
-
-                {/* Section Declined */}
-                <section>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                        Declined Tickets
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-80">
-                        {ticketData.declined.map((t) => (
-                            <TicketCard
-                                key={t.id}
-                                ticket={t}
-                                statusType="declined"
-                            />
-                        ))}
-                    </div>
-                </section>
-            </div>
+            </Widget>
         </AuthenticatedLayout>
     );
 }
