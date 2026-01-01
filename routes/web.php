@@ -90,6 +90,7 @@ Route::get('/contracts/{contract}/pdf', [ContractController::class, 'generatePdf
 
 // Project Board
 Route::get('/project-board', [ProjectBoardController::class, 'index'])->name('project.board');
+Route::get('/project-board/{project}/features/{feature}', [ProjectBoardController::class, 'show'])->name('project.board.show');
 Route::patch('/project-board/{project}/features/{feature}/status', [ProjectBoardController::class, 'updateStatus'])->name('project.board.update-status');
 Route::delete('project-board/{project}/features/{feature}', [ProjectBoardController::class, 'destroy'])->name('project.board.destroy');
 Route::post('/project-board/{project}/features', [ProjectBoardController::class, 'addFeature'])->name('project.board.add');

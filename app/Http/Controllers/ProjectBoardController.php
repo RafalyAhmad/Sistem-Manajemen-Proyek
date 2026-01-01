@@ -53,7 +53,15 @@ class ProjectBoardController extends Controller
                 'updated_at' => now(),
             ]);
 
-        return back()->with('success', 'Status fitur berhasil diperbarui');
+    }
+
+    public function show(Project $project, Feature $feature)
+    {
+        $project->load('features');
+        return Inertia::render('ProjectBoardShow', [
+            'project' => $project,
+            'feature' => $feature,
+        ]);
     }
 
     public function destroy(Project $project, Feature $feature)

@@ -315,6 +315,7 @@ export default function FeatureManagement() {
                             <th className="border p-2">Nama Feature</th>
                             <th className="border p-2">CFP</th>
                             <th className="border p-2">Aksi</th>
+                            <th className="border p-2">Deskripsi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -338,6 +339,7 @@ export default function FeatureManagement() {
                                         Hapus
                                     </button>
                                 </td>
+                                <td className="border p-2">{f.description}</td>
                             </tr>
                         ))}
                     </tbody>

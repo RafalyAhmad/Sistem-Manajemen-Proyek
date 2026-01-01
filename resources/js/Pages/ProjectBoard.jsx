@@ -1,7 +1,7 @@
 import Widget from "@/Components/Widget";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { useState } from "react";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 
 export default function ProjectBoard({ project, projects, features }) {
     const [showForm, setShowForm] = useState(false);
@@ -245,9 +245,23 @@ export default function ProjectBoard({ project, projects, features }) {
                                                 Hapus Fitur
                                             </button>
 
-                                            <button className="bg-blue-400 mx-1">
-                                                detail
-                                            </button>
+                                            {project.features.map((feature) => (
+                                                <Link
+                                                    key={feature.feature_id}
+                                                    href={route(
+                                                        "project.board.show",
+                                                        {
+                                                            project:
+                                                                project.project_id,
+                                                            feature:
+                                                                feature.feature_id,
+                                                        }
+                                                    )}
+                                                    className="bg-blue-400 mx-1"
+                                                >
+                                                    Detail
+                                                </Link>
+                                            ))}
                                         </td>
                                     </tr>
                                 ))}

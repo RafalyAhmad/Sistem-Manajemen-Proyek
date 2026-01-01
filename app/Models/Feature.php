@@ -23,7 +23,6 @@ class Feature extends Model
         'updated_at',
     ];
 
-    // Hubungan ke User (Foreign Key user_id)
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'feature_project', 'feature_id', 'project_id')
