@@ -10,7 +10,6 @@ class FeatureSeeder extends Seeder
     public function run(): void
     {
         Feature::create([
-            'project_id' => 1,
             'feature_name' => 'Manajemen Data',
             'description' => 'Dashboard untuk mengelola data proyek',
             'external_input' => 0,
@@ -25,7 +24,6 @@ class FeatureSeeder extends Seeder
 
         // ===== Feature 2 =====
         Feature::create([
-            'project_id' => 1,
             'feature_name' => 'Pelaporan',
             'description' => 'Generate laporan proyek',
             'external_input' => 2,

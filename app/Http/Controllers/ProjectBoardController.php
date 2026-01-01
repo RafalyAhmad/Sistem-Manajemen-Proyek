@@ -23,22 +23,21 @@ class ProjectBoardController extends Controller
         return Inertia::render('ProjectBoard', [
             'projects' => $projects,
             'project' => $project->load('features'),
-    'features' => Feature::all(), 
+            'features' => Feature::all(),
         ]);
     }
 
     public function addFeature(Request $request, Project $project)
-{
-    $project->features()->attach($request->feature_id, [
-        'status' => 'to_do',
-        'fp_adjustment' => 0,
-        'added_type' => 'change',
-    ]);
+    {
+        $project->features()->attach($request->feature_id, [
+            'status' => 'to_do',
+            'fp_adjustment' => 0,
+            'added_type' => 'change',
+        ]);
 
-    // $this->recalculateProjectFP($project);
+        // $this->recalculateProjectFP($project);
 
-}
-
+    }
 
     public function updateStatus(Request $request, Project $project, Feature $feature)
     {
@@ -56,8 +55,6 @@ class ProjectBoardController extends Controller
 
         return back()->with('success', 'Status fitur berhasil diperbarui');
     }
-
-
 
     public function destroy(Project $project, Feature $feature)
     {

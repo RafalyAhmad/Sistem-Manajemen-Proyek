@@ -4,7 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Widget from "@/Components/Widget";
 
 export default function FeatureManagement() {
-    const { features, projects } = usePage().props;
+    const { features } = usePage().props;
 
     const {
         data,
@@ -15,24 +15,14 @@ export default function FeatureManagement() {
         reset,
     } = useForm({
         feature_id: "",
-        project_id: "",
         feature_name: "",
         description: "",
-        status: "in_progress",
         external_input: "",
         external_output: "",
         logical_internal_file: "",
         external_interface_file: "",
         external_inquiry: "",
         feature_cfp: "",
-        // initial_feature_fee: "",
-        // final_feature_fee: "",
-        // initial_feature_time: "",
-        // final_feature_time: "",
-        // change_feature_fee: "",
-        // change_feature_time: "",
-        // total_change_feature_fee: "",
-        // total_change_feature_time: "",
     });
 
     const [weightEI, setWeightEI] = React.useState("");
@@ -126,24 +116,14 @@ export default function FeatureManagement() {
     const editFeature = (feature) => {
         setData({
             feature_id: feature.feature_id,
-            project_id: feature.project_id,
             feature_name: feature.feature_name,
             description: feature.description,
-            status: feature.status,
             external_input: feature.external_input,
             external_output: feature.external_output,
             logical_internal_file: feature.logical_internal_file,
             external_interface_file: feature.external_interface_file,
             external_inquiry: feature.external_inquiry,
             feature_cfp: feature.feature_cfp,
-            // initial_feature_fee: feature.initial_feature_fee,
-            // final_feature_fee: feature.final_feature_fee,
-            // initial_feature_time: feature.initial_feature_time,
-            // final_feature_time: feature.final_feature_time,
-            // change_feature_fee: feature.change_feature_fee,
-            // change_feature_time: feature.change_feature_time,
-            // total_change_feature_fee: feature.total_change_feature_fee,
-            // total_change_feature_time: feature.total_change_feature_time,
         });
     };
 
@@ -159,19 +139,6 @@ export default function FeatureManagement() {
                 <h1 className="text-2xl font-bold mb-6">Feature Management</h1>
 
                 <form onSubmit={submit} className="grid grid-cols-2 gap-4 mb-8">
-                    <select
-                        value={data.project_id}
-                        onChange={(e) => setData("project_id", e.target.value)}
-                        className="border p-2 rounded col-span-2"
-                    >
-                        <option value="">-- Pilih Project --</option>
-                        {projects.map((p) => (
-                            <option key={p.project_id} value={p.project_id}>
-                                {p.project_name}
-                            </option>
-                        ))}
-                    </select>
-
                     <input
                         type="text"
                         placeholder="Nama Fitur"
@@ -334,47 +301,6 @@ export default function FeatureManagement() {
                         readOnly
                         className="border p-2 rounded"
                     />
-
-                    <input
-                        type="number"
-                        placeholder="Initial Fee"
-                        value={data.initial_feature_fee}
-                        onChange={(e) =>
-                            setData("initial_feature_fee", e.target.value)
-                        }
-                        className="border p-2 rounded"
-                    />
-
-                    <input
-                        type="number"
-                        placeholder="Final Fee"
-                        value={data.final_feature_fee}
-                        onChange={(e) =>
-                            setData("final_feature_fee", e.target.value)
-                        }
-                        className="border p-2 rounded"
-                    />
-
-                    <input
-                        type="number"
-                        placeholder="Initial Time"
-                        value={data.initial_feature_time}
-                        onChange={(e) =>
-                            setData("initial_feature_time", e.target.value)
-                        }
-                        className="border p-2 rounded"
-                    />
-
-                    <input
-                        type="number"
-                        placeholder="Final Time"
-                        value={data.final_feature_time}
-                        onChange={(e) =>
-                            setData("final_feature_time", e.target.value)
-                        }
-                        className="border p-2 rounded"
-                    />
-
                     <button
                         type="submit"
                         className="bg-blue-600 text-white py-2 px-4 rounded col-span-2"
@@ -387,7 +313,6 @@ export default function FeatureManagement() {
                     <thead>
                         <tr className="bg-gray-200">
                             <th className="border p-2">Nama Feature</th>
-                            <th className="border p-2">Fee</th>
                             <th className="border p-2">CFP</th>
                             <th className="border p-2">Aksi</th>
                         </tr>
@@ -396,9 +321,6 @@ export default function FeatureManagement() {
                         {features.map((f) => (
                             <tr key={f.feature_id}>
                                 <td className="border p-2">{f.feature_name}</td>
-                                <td className="border p-2">
-                                    {f.initial_feature_fee}
-                                </td>
                                 <td className="border p-2">{f.feature_cfp}</td>
                                 <td className="border p-2">
                                     <button

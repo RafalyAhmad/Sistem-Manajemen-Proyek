@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Project;
 use App\Models\Ticket;
 use App\Models\User;
@@ -21,7 +19,6 @@ class TicketController extends Controller
         ]);
     }
 
-    // CREATE
     public function create()
     {
         return Inertia::render('Tickets');
@@ -42,7 +39,6 @@ class TicketController extends Controller
         $ticket = Ticket::create($validatedData);
     }
 
-    // UPDATE (Tampilkan form untuk mengedit)
     public function edit(Ticket $ticket)
     {
         return Inertia::render('Tickets/Edit', [
@@ -50,7 +46,6 @@ class TicketController extends Controller
         ]);
     }
 
-    // UPDATE (Simpan perubahan data)
     public function update(Request $request, Ticket $ticket)
     {
         $validatedData = $request->validate([
@@ -64,15 +59,10 @@ class TicketController extends Controller
         ]);
 
         $ticket->update($validatedData);
-
-        return redirect()->back()->with('success', 'berhasil diperbarui.');
     }
 
-    // DELETE (Hapus data)
     public function destroy(Ticket $ticket)
     {
         $ticket->delete();
-
-        return redirect()->back()->with('success', 'ticket berhasil dihapus.');
     }
 }

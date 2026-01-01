@@ -11,7 +11,6 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    // READ (Tampilkan semua projects)
     public function index()
     {
         return Inertia::render('ProjectManagement', [
@@ -39,7 +38,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    // STORE PROJECT NEW
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -58,7 +56,7 @@ class ProjectController extends Controller
             'working_hour_per_day' => 'required|numeric|min:1',
             'development_cost_per_day' => 'required|numeric|min:1',
             'line_of_code_per_day' => 'required|numeric|min:1',
-            // fitur harus array ID
+
             'features' => 'required|array',
             'features.*' => 'exists:features,feature_id',
         ]);
@@ -67,19 +65,15 @@ class ProjectController extends Controller
         // hubungkan fitur
         $project->features()->sync($request->features);
         foreach ($request->features as $featureId) {
-    $project->features()->attach($featureId, [
-        'status' => 'to_do',
-        'fp_adjustment' => 0,
-        'added_type' => 'baseline',
-        'added_at' => now(),
-    ]);
-}
-
-
-        // return Redirect::route('projects.index')->with('success', 'Project berhasil ditambahkan.');
+            $project->features()->attach($featureId, [
+                'status' => 'to_do',
+                'fp_adjustment' => 0,
+                'added_type' => 'baseline',
+                'added_at' => now(),
+            ]);
+        }
     }
 
-    // EDIT FORM
     public function edit(Project $project)
     {
         return Inertia::render('Projects/Edit', [
@@ -89,7 +83,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    // SAVE UPDATE
     public function update(Request $request, Project $project)
     {
         $validatedData = $request->validate([

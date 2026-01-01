@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contract extends Model
 {
-    //
     use HasFactory;
 
     protected $primaryKey = 'contract_id';

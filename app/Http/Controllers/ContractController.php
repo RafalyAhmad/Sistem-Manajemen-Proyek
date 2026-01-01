@@ -13,7 +13,7 @@ class ContractController extends Controller
 {
     public function index()
     {
-        $contracts = Contract::with('user', 'project')->get(); // Ambil projects beserta relasi user
+        $contracts = Contract::with('user', 'project')->get();
 
         return Inertia::render('ContractManagement', [
             'contracts' => $contracts,
@@ -23,7 +23,6 @@ class ContractController extends Controller
 
     }
 
-    // CREATE
     public function create()
     {
         return Inertia::render('Contracts');
@@ -36,28 +35,21 @@ class ContractController extends Controller
             'user_id' => 'required|exists:users,id',
             'contract_number' => 'required|string',
             'contract_date' => 'required|date',
-
         ]);
-
         Contract::create($validatedData);
-
-        return redirect()->back()->with('success', 'berhasil ditambahkan.');
     }
 
     public function generatePdf(Contract $contract)
     {
         $contract->load('user', 'project');
-
         $pdf = Pdf::loadView('contracts.pdf', [
             'contract' => $contract,
         ]);
 
         // return $pdf->download('kontrak-' . $contract->contract_number . '.pdf');
         return $pdf->stream('kontrak.pdf');
-
     }
 
-    // UPDATE (Tampilkan form untuk mengedit)
     public function edit(Contract $contract)
     {
         return Inertia::render('contract/Edit', [
@@ -65,7 +57,6 @@ class ContractController extends Controller
         ]);
     }
 
-    // UPDATE (Simpan perubahan data)
     public function update(Request $request, Contract $contract)
     {
         $validatedData = $request->validate([
@@ -73,15 +64,12 @@ class ContractController extends Controller
             'user_id' => 'required|exists:users,id',
             'contract_number' => 'required|string',
             'contract_date' => 'required|date',
-
         ]);
-
         $contract->update($validatedData);
 
         return redirect()->back()->with('success', 'berhasil diperbarui.');
     }
 
-    // DELETE (Hapus data)
     public function destroy(Contract $contract)
     {
         $contract->delete();

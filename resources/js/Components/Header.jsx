@@ -45,7 +45,7 @@ export default function Header({ user, onToggleSidebar, showing }) {
                                 type="button"
                                 className="inline-flex items-center border border-transparent bg-white text-sm text-gray-800 font-medium leading-4 transition duration-300 ease-in-out hover:text-gray-400 focus:outline-none"
                             >
-                                {user.name}
+                                {user?.name}
 
                                 <svg
                                     className="-me-0.5 ms-2 h-4 w-4"
