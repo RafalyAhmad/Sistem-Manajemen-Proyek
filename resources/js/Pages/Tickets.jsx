@@ -6,9 +6,30 @@ import React from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import Widget from "@/Components/Widget";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { router } from "@inertiajs/react";
 
 export default function Tickets() {
     const { tickets, user, project } = usePage().props;
+
+    const updateStatus = (ticketId, status) => {
+        router.patch(
+            route("tickets.update-status", {
+                ticket: ticketId,
+            }),
+            { status }
+        );
+    };
+
+    const formatTanggal = (dateString) => {
+        return new Date(dateString).toLocaleString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+
     const {
         data,
         setData,
@@ -40,18 +61,6 @@ export default function Tickets() {
         }
     };
 
-    const editTicket = (ticket) => {
-        setData({
-            ticket_id: ticket.ticket_id,
-            user_id: ticket.user_id,
-            project_id: ticket.project_id,
-            title: ticket.title,
-            description: ticket.description,
-            status: ticket.status,
-            timestamp: ticket.timestamp,
-        });
-    };
-
     const deleteTicket = (ticket_id) => {
         if (confirm("Yakin ingin menghapus ticket ini?")) {
             destroy(`/tickets/${ticket_id}`);
@@ -61,7 +70,6 @@ export default function Tickets() {
     return (
         <AuthenticatedLayout>
             <Widget>
-                {/* FORM */}
                 <form
                     onSubmit={submit}
                     className="grid grid-cols-2 gap-4 mb-10"
@@ -130,32 +138,6 @@ export default function Tickets() {
                         />
                     </div>
 
-                    <div>
-                        <label className="font-semibold mb-1 block">
-                            Status Tiket
-                        </label>
-                        <input
-                            type="text"
-                            className="border rounded px-3 py-2 w-full"
-                            value={data.status}
-                            onChange={(e) => setData("status", e.target.value)}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="font-semibold mb-1 block">
-                            Waktu dibuat
-                        </label>
-                        <input
-                            type="datetime-local"
-                            className="border rounded px-3 py-2 w-full"
-                            value={data.timestamp}
-                            onChange={(e) =>
-                                setData("timestamp", e.target.value)
-                            }
-                        />
-                    </div>
-
                     <div className="col-span-2">
                         <button
                             type="submit"
@@ -166,7 +148,6 @@ export default function Tickets() {
                     </div>
                 </form>
 
-                {/* TABLE */}
                 <div className="overflow-x-auto">
                     <table className="w-full border text-center">
                         <thead className="bg-gray-200">
@@ -174,8 +155,9 @@ export default function Tickets() {
                                 <th className="p-2 border">User</th>
                                 <th className="p-2 border">Project</th>
                                 <th className="p-2 border">Judul</th>
+                                <th className="p-2 border">Deskripsi</th>
+                                <th className="p-2 border">Waktu dibuat</th>
                                 <th className="p-2 border">Status</th>
-                                <th className="p-2 border">Waktu Kontrak</th>
                                 <th className="p-2 border">Aksi</th>
                             </tr>
                         </thead>
@@ -193,16 +175,30 @@ export default function Tickets() {
                                         {t.project?.project_name}
                                     </td>
                                     <td className="border p-2">{t.title}</td>
-                                    <td className="border p-2">{t.status}</td>
+                                    <td className="border p-2">
+                                        {t.description}
+                                    </td>
+                                    <td className="border p-2">
+                                        {formatTanggal(t.created_at)}
+                                    </td>
+
+                                    <td className="border p-2">
+                                        {t.status === "live" ? (
+                                            <span className="text-blue-600 font-semibold">
+                                                Sedang berlangsung
+                                            </span>
+                                        ) : t.status === "approve" ? (
+                                            <span className="text-green-600 font-semibold">
+                                                Diterima
+                                            </span>
+                                        ) : t.status === "decline" ? (
+                                            <span className="text-red-600 font-semibold">
+                                                Ditolak
+                                            </span>
+                                        ) : null}
+                                    </td>
 
                                     <td className="border p-2 space-x-2">
-                                        <button
-                                            className="bg-yellow-500 text-white px-3 py-1 rounded"
-                                            onClick={() => editTicket(t)}
-                                        >
-                                            Edit
-                                        </button>
-
                                         <button
                                             className="bg-red-600 text-white px-3 py-1 rounded"
                                             onClick={() =>
@@ -210,6 +206,39 @@ export default function Tickets() {
                                             }
                                         >
                                             Hapus
+                                        </button>
+                                        <button
+                                            className="bg-blue-600 text-white px-3 py-1 rounded"
+                                            onClick={() =>
+                                                updateStatus(
+                                                    t.ticket_id,
+                                                    "live"
+                                                )
+                                            }
+                                        >
+                                            Tandai berlangsung
+                                        </button>
+                                        <button
+                                            className="bg-green-600 text-white px-3 py-1 rounded"
+                                            onClick={() =>
+                                                updateStatus(
+                                                    t.ticket_id,
+                                                    "approve"
+                                                )
+                                            }
+                                        >
+                                            Tandai diterima
+                                        </button>
+                                        <button
+                                            className="bg-yellow-600 text-white px-3 py-1 rounded"
+                                            onClick={() =>
+                                                updateStatus(
+                                                    t.ticket_id,
+                                                    "decline"
+                                                )
+                                            }
+                                        >
+                                            Tandai ditolak
                                         </button>
                                     </td>
                                     <td></td>

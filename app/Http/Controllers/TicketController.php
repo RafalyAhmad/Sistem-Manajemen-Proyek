@@ -31,19 +31,18 @@ class TicketController extends Controller
             'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'notulensi' => 'required|string|max:255',
-            'status' => 'required|in:live,approve,decline',
-            'timestamp' => 'required|date',
         ]);
-
+        $validatedData['status'] = 'live';
         $ticket = Ticket::create($validatedData);
     }
 
-    public function edit(Ticket $ticket)
+    public function updateStatus(Request $request, Ticket $ticket)
     {
-        return Inertia::render('Tickets/Edit', [
-            'ticket' => $ticket,
+        $validatedData = $request->validate([
+            'status' => 'required|in:live,approve,decline',
         ]);
+
+        $ticket->update($validatedData);
     }
 
     public function update(Request $request, Ticket $ticket)
@@ -53,9 +52,7 @@ class TicketController extends Controller
             'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'notulensi' => 'required|string|max:255',
-            'status' => 'required|in:live,approved,declined',
-            'timestamp' => 'required|date',
+            'status' => 'required|in:live,approve,decline',
         ]);
 
         $ticket->update($validatedData);

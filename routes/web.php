@@ -43,8 +43,9 @@ Route::get('/tickets', function () {
 
 Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
 Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
-Route::put('/tickets/{id}', [TicketController::class, 'update'])->name('tickets.update');
-Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])->name('tickets.update-status');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

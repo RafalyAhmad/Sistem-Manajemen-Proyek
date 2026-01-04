@@ -34,9 +34,6 @@ class ProjectBoardController extends Controller
             'fp_adjustment' => 0,
             'added_type' => 'change',
         ]);
-
-        // $this->recalculateProjectFP($project);
-
     }
 
     public function updateStatus(Request $request, Project $project, Feature $feature)

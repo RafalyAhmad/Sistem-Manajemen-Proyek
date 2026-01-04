@@ -2,6 +2,12 @@ import Widget from "@/Components/Widget";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
 export default function Show({ project }) {
+    const formatter = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+    });
+
     return (
         <AuthenticatedLayout>
             <Widget>
@@ -11,10 +17,14 @@ export default function Show({ project }) {
                         {project.project_name}
                     </h1>
                     <p className="text-gray-600">{project.description}</p>
-                    Estimasi biaya awal: {project.initial_project_fee} <br />
-                    Estimasi waktu awal: {project.initial_project_time} <br />
-                    Estimasi biaya akhir: {project.final_project_fee} <br />
-                    Estimasi waktu akhir: {project.final_project_time} <br />
+                    Estimasi biaya awal:{" "}
+                    {formatter.format(project.initial_project_fee)} <br />
+                    Estimasi waktu awal: {project.initial_project_time} Jam{" "}
+                    <br />
+                    Estimasi biaya akhir:{" "}
+                    {formatter.format(project.final_project_fee)} <br />
+                    Estimasi waktu akhir: {project.final_project_time} Jam{" "}
+                    <br />
                     Status: {project.status} <br />
                     Total CFP: {project.total_cfp} <br />
                     Total RCAF: {project.total_rcaf} <br />
@@ -45,7 +55,6 @@ export default function Show({ project }) {
                                     <th className="border p-2">No</th>
                                     <th className="border p-2">Nama Fitur</th>
                                     <th className="border p-2">Status Fitur</th>
-                                    <th className="border p-2">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
