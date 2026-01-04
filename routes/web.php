@@ -95,5 +95,6 @@ Route::get('/project-board/{project}/features/{feature}', [ProjectBoardControlle
 Route::patch('/project-board/{project}/features/{feature}/status', [ProjectBoardController::class, 'updateStatus'])->name('project.board.update-status');
 Route::delete('project-board/{project}/features/{feature}', [ProjectBoardController::class, 'destroy'])->name('project.board.destroy');
 Route::post('/project-board/{project}/features', [ProjectBoardController::class, 'addFeature'])->name('project.board.add');
+Route::post('/project-board/{project}/features/{feature}/fp-adjustment',[ProjectBoardController::class, 'storeFpAdjustment'])->name('project.board.fp-adjustment.store');
 
 require __DIR__.'/auth.php';

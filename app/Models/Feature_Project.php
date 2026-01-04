@@ -11,13 +11,17 @@ class Feature_Project extends Model
 
     protected $table = 'feature_project';
 
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'feature_project_id';
 
     protected $fillable = [
         'project_id',
         'feature_id',
         'status',
         'added_type',
-        'fp_adjustment',
     ];
+
+    public function fpAdjustments()
+    {
+        return $this->hasMany(FpAdjustment::class, 'feature_project_id', 'feature_project_id');
+    }
 }
