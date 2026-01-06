@@ -19,7 +19,6 @@ class ProjectController extends Controller
             'features' => Feature::select('feature_id as id', 'feature_name', 'feature_cfp')->get(),
         ]);
     }
-
     public function show(Project $project)
     {
         $project->load('features');
@@ -28,8 +27,6 @@ class ProjectController extends Controller
             'project' => $project,
         ]);
     }
-
-    // CREATE FORM
     public function create()
     {
         return Inertia::render('Projects/Create', [
@@ -37,7 +34,6 @@ class ProjectController extends Controller
             'features' => Feature::select('feature_id as id', 'description')->get(),
         ]);
     }
-
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -60,20 +56,21 @@ class ProjectController extends Controller
             'features' => 'required|array',
             'features.*' => 'exists:features,feature_id',
         ]);
-        $project = Project::create($validatedData);
+    $project = Project::create($validatedData);
 
-        // hubungkan fitur
-        $project->features()->sync($request->features);
-        foreach ($request->features as $featureId) {
-            $project->features()->attach($featureId, [
-                'status' => 'to_do',
-                'fp_adjustment' => 0,
-                'added_type' => 'baseline',
-                'added_at' => now(),
-            ]);
-        }
+$pivotData = [];
+
+foreach ($request->features as $featureId) {
+    $pivotData[$featureId] = [
+        'status' => 'to_do',
+        'fp_adjustment' => 0,
+        'added_type' => 'baseline',
+    ];
+}
+
+$project->features()->sync($pivotData);
+
     }
-
     public function edit(Project $project)
     {
         return Inertia::render('Projects/Edit', [
@@ -82,7 +79,6 @@ class ProjectController extends Controller
             'features' => Feature::select('feature_id', 'feature_name')->get(),
         ]);
     }
-
     public function update(Request $request, Project $project)
     {
         $validatedData = $request->validate([
@@ -101,24 +97,17 @@ class ProjectController extends Controller
             'working_hour_per_day' => 'required|numeric|min:1',
             'development_cost_per_day' => 'required|numeric|min:1',
             'line_of_code_per_day' => 'required|numeric|min:1',
-            // fitur harus array ID
             'features' => 'required|array',
             'features.*' => 'exists:features,feature_id',
         ]);
-
         $project->update($validatedData);
-
         // update relasi fitur
         $project->features()->sync($request->features);
 
-        // return Redirect::route('projects.index')->with('success', 'Project berhasil diperbarui.');
     }
-
-    // DELETE PROJECT
     public function destroy(Project $project)
     {
         $project->features()->detach(); // bersihkan pivot
         $project->delete();
-        // return Redirect::route('projects.index')->with('success', 'Project berhasil dihapus.');
     }
 }
