@@ -380,7 +380,7 @@ export default function ProjectManagement({ projects, features }) {
                     {/* Waktu awal */}
                     <div>
                         <label className="block mb-1 font-semibold">
-                            Durasi awal Proyek - Jam
+                            Durasi awal Proyek{""}(jam)
                         </label>
                         <input
                             type="number"
@@ -462,7 +462,7 @@ export default function ProjectManagement({ projects, features }) {
                             <tr>
                                 <th className="border p-2">User</th>
                                 <th className="border p-2">Project</th>
-                                <th className="border p-2">Tanggal</th>
+                                <th className="border p-2">Durasi {""}(jam)</th>
                                 <th className="border p-2">Status</th>
                                 <th className="border p-2">Aksi</th>
                             </tr>

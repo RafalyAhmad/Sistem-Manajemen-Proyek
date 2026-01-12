@@ -57,7 +57,6 @@ class ProjectController extends Controller
             'features.*' => 'exists:features,feature_id',
         ]);
     $project = Project::create($validatedData);
-
 $pivotData = [];
 
 foreach ($request->features as $featureId) {
