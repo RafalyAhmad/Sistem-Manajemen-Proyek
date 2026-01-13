@@ -316,6 +316,9 @@ export default function FeatureManagement() {
                             <th className="border p-2">CFP</th>
                             <th className="border p-2">Aksi</th>
                             <th className="border p-2">Deskripsi</th>
+                            <th className="border p-2">
+                                Komponen - EI, EO, LIF, EIF, EI
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -340,6 +343,12 @@ export default function FeatureManagement() {
                                     </button>
                                 </td>
                                 <td className="border p-2">{f.description}</td>
+                                <td className="border p-2">
+                                    {f.external_input},{f.external_output},
+                                    {f.logical_internal_file},
+                                    {f.external_interface_file},
+                                    {f.external_inquiry}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

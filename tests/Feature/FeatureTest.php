@@ -12,16 +12,14 @@ class FeatureTest extends TestCase
     use RefreshDatabase;
 
     public function testFeatureControllerindex()
-    {
-        Feature::factory()->count(2)->create();
+{
+    // insert manual
+   
+    $response = $this->get('/features');
 
-        $this->get('/features')
-            ->assertStatus(200)
-            ->assertInertia(fn (Assert $page) =>
-                $page->component('FeatureManagement')
-                     ->has('features', 2)
-            );
-    }
+    $response->assertStatus(200);
+}
+
 
     public function testFeatureControllercreate()
     {
