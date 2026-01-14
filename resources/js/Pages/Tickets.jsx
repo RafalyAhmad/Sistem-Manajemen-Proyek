@@ -1,12 +1,12 @@
 // import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 // import { Head } from "@inertiajs/react";
-// import TicketCard from "@/Components/TicketCard";
 // import BasicInput from "@/Components/BasicInput";
 import React from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import Widget from "@/Components/Widget";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { router } from "@inertiajs/react";
+import TicketCard from "@/Components/TicketCard";
 
 export default function Tickets() {
     const { tickets, user, project } = usePage().props;
@@ -19,6 +19,10 @@ export default function Tickets() {
             { status }
         );
     };
+
+    const liveTickets = tickets.filter((t) => t.status === "live");
+    const approvedTickets = tickets.filter((t) => t.status === "approve");
+    const declinedTickets = tickets.filter((t) => t.status === "decline");
 
     const formatTanggal = (dateString) => {
         return new Date(dateString).toLocaleString("id-ID", {
@@ -147,107 +151,63 @@ export default function Tickets() {
                         </button>
                     </div>
                 </form>
-
-                <div className="overflow-x-auto">
-                    <table className="w-full border text-center">
-                        <thead className="bg-gray-200">
-                            <tr>
-                                <th className="p-2 border">User</th>
-                                <th className="p-2 border">Project</th>
-                                <th className="p-2 border">Judul</th>
-                                <th className="p-2 border">Deskripsi</th>
-                                <th className="p-2 border">Waktu dibuat</th>
-                                <th className="p-2 border">Status</th>
-                                <th className="p-2 border">Aksi</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {tickets.map((t) => (
-                                <tr
-                                    key={t.ticket_id}
-                                    className="hover:bg-gray-50"
-                                >
-                                    <td className="border p-2">
-                                        {t.user?.name}
-                                    </td>
-                                    <td className="border p-2">
-                                        {t.project?.project_name}
-                                    </td>
-                                    <td className="border p-2">{t.title}</td>
-                                    <td className="border p-2">
-                                        {t.description}
-                                    </td>
-                                    <td className="border p-2">
-                                        {formatTanggal(t.created_at)}
-                                    </td>
-
-                                    <td className="border p-2">
-                                        {t.status === "live" ? (
-                                            <span className="text-blue-600 font-semibold">
-                                                Sedang berlangsung
-                                            </span>
-                                        ) : t.status === "approve" ? (
-                                            <span className="text-green-600 font-semibold">
-                                                Diterima
-                                            </span>
-                                        ) : t.status === "decline" ? (
-                                            <span className="text-red-600 font-semibold">
-                                                Ditolak
-                                            </span>
-                                        ) : null}
-                                    </td>
-
-                                    <td className="border p-2 space-x-2">
-                                        <button
-                                            className="bg-red-600 text-white px-3 py-1 rounded"
-                                            onClick={() =>
-                                                deleteTicket(t.ticket_id)
-                                            }
-                                        >
-                                            Hapus
-                                        </button>
-                                        <button
-                                            className="bg-blue-600 text-white px-3 py-1 rounded"
-                                            onClick={() =>
-                                                updateStatus(
-                                                    t.ticket_id,
-                                                    "live"
-                                                )
-                                            }
-                                        >
-                                            Tandai berlangsung
-                                        </button>
-                                        <button
-                                            className="bg-green-600 text-white px-3 py-1 rounded"
-                                            onClick={() =>
-                                                updateStatus(
-                                                    t.ticket_id,
-                                                    "approve"
-                                                )
-                                            }
-                                        >
-                                            Tandai diterima
-                                        </button>
-                                        <button
-                                            className="bg-yellow-600 text-white px-3 py-1 rounded"
-                                            onClick={() =>
-                                                updateStatus(
-                                                    t.ticket_id,
-                                                    "decline"
-                                                )
-                                            }
-                                        >
-                                            Tandai ditolak
-                                        </button>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
             </Widget>
+
+            <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {/* Kolom LIVE */}
+                <section className="space-y-4">
+                    <h3 className="font-bold text-gray-700 flex items-center gap-2">
+                        <span className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></span>
+                        Ticket Baru ({liveTickets.length})
+                    </h3>
+                    <div className="grid grid-cols-1 gap-4">
+                        {liveTickets.map((t) => (
+                            <TicketCard
+                                key={t.ticket_id}
+                                ticket={t}
+                                statusType="live"
+                                onAction={updateStatus}
+                            />
+                        ))}
+                    </div>
+                </section>
+
+                {/* Kolom APPROVED */}
+                <section className="space-y-4">
+                    <h3 className="font-bold text-gray-700 flex items-center gap-2">
+                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                        Diterima ({approvedTickets.length})
+                    </h3>
+                    <div className="grid grid-cols-1 gap-4 opacity-90">
+                        {approvedTickets.map((t) => (
+                            <TicketCard
+                                key={t.ticket_id}
+                                ticket={t}
+                                statusType="approve"
+                                onAction={updateStatus}
+                            />
+                        ))}
+                    </div>
+                </section>
+
+                {/* Kolom DECLINED */}
+                <section className="space-y-4">
+                    <h3 className="font-bold text-gray-700 flex items-center gap-2">
+                        <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+                        Ditolak ({declinedTickets.length})
+                    </h3>
+                    <div className="grid grid-cols-1 gap-4 opacity-90">
+                        {declinedTickets.map((t) => (
+                            <TicketCard
+                                key={t.ticket_id}
+                                ticket={t}
+                                statusType="decline"
+                                onAction={updateStatus}
+                            />
+                        ))}
+                    </div>
+                </section>
+            </div>
         </AuthenticatedLayout>
     );
 }
