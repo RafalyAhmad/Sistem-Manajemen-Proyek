@@ -186,8 +186,8 @@ export default function Sidebar({ showing, toggle }) {
                     Tickets
                 </SidebarItem>
                 <SidebarItem
-                    href={route("notifications")}
-                    active={route().current("notifications")}
+                    href={route("notifications.index")}
+                    active={route().current("notifications.index")}
                     icon={<NotificationsIcon />}
                 >
                     Notifications

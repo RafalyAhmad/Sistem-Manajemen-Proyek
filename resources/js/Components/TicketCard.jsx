@@ -1,15 +1,23 @@
 import Buttons from "@/Components/Buttons";
 
-export default function TicketCard({ ticket, statusType }) {
-    const { title, description, sender, date } = ticket;
+export default function TicketCard({ ticket, statusType, onAction }) {
+    // Sesuaikan dengan struktur data backend Anda
+    const { ticket_id, title, description, user, created_at } = ticket;
 
-    // Icon status berdasarkan tipe
+    const formatTanggal = (dateString) => {
+        return new Date(dateString).toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+        });
+    };
+
     const StatusIcon = () => {
         if (statusType === "live")
             return (
-                <div className="bg-blue-100 p-3 rounded-full">
+                <div className="bg-blue-100 p-3 rounded-full text-blue-600">
                     <svg
-                        className="w-8 h-8 text-blue-600"
+                        className="w-6 h-6"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -29,11 +37,11 @@ export default function TicketCard({ ticket, statusType }) {
                     </svg>
                 </div>
             );
-        if (statusType === "approved")
+        if (statusType === "approve")
             return (
-                <div className="bg-green-100 p-3 rounded-full">
+                <div className="bg-green-100 p-3 rounded-full text-green-600">
                     <svg
-                        className="w-8 h-8 text-green-600"
+                        className="w-6 h-6"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -48,10 +56,9 @@ export default function TicketCard({ ticket, statusType }) {
                 </div>
             );
         return (
-            // declined
-            <div className="bg-red-100 p-3 rounded-full">
+            <div className="bg-red-100 p-3 rounded-full text-red-600">
                 <svg
-                    className="w-8 h-8 text-red-600"
+                    className="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -68,32 +75,20 @@ export default function TicketCard({ ticket, statusType }) {
     };
 
     return (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
             <div className="flex items-start gap-4 mb-4">
                 <StatusIcon />
-                <div className="flex-1">
-                    <h4 className="text-xl font-bold text-gray-900 leading-tight">
+                <div className="flex-1 min-w-0">
+                    <h4
+                        className="text-lg font-bold text-gray-900 truncate"
+                        title={title}
+                    >
                         {title}
                     </h4>
-                    <p className="text-xs text-gray-400 mt-1">
-                        {sender} • {date}
+                    <p className="text-xs text-gray-500 mt-1">
+                        {user?.name || "Unknown"} • {formatTanggal(created_at)}
                     </p>
                 </div>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                    <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                    </svg>
-                </a>
             </div>
 
             <div className="flex-1">
@@ -102,27 +97,36 @@ export default function TicketCard({ ticket, statusType }) {
                 </p>
             </div>
 
-            {/* Aksi hanya muncul untuk Live Tickets */}
-            {statusType === "live" ? (
-                <div className="flex gap-2 mt-auto">
-                    <Buttons variant="success" className="flex-1 text-sm py-2">
-                        Approve
-                    </Buttons>
-                    <Buttons variant="primary" className="flex-1 text-sm py-2">
-                        Decline
-                    </Buttons>
-                </div>
-            ) : (
-                <div
-                    className={`mt-auto text-center py-2 rounded-lg font-bold uppercase text-xs tracking-widest ${
-                        statusType === "approved"
-                            ? "bg-green-50 text-green-600"
-                            : "bg-red-50 text-red-600"
-                    }`}
-                >
-                    {statusType}
-                </div>
-            )}
+            <div className="mt-auto pt-4 border-t border-gray-50">
+                {statusType === "live" ? (
+                    <div className="flex gap-2">
+                        <Buttons
+                            onClick={() => onAction(ticket_id, "approve")}
+                            variant="success"
+                            className="flex-1 text-xs py-2 justify-center"
+                        >
+                            Terima
+                        </Buttons>
+                        <Buttons
+                            onClick={() => onAction(ticket_id, "decline")}
+                            variant="primary"
+                            className="flex-1 text-xs py-2 justify-center bg-red-600 hover:bg-red-700 border-none"
+                        >
+                            Tolak
+                        </Buttons>
+                    </div>
+                ) : (
+                    <div
+                        className={`text-center py-2 rounded-lg font-bold uppercase text-[10px] tracking-widest ${
+                            statusType === "approve"
+                                ? "bg-green-50 text-green-600"
+                                : "bg-red-50 text-red-600"
+                        }`}
+                    >
+                        {statusType === "approve" ? "Diterima" : "Ditolak"}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

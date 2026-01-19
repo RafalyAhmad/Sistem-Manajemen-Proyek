@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProfileController;
@@ -25,9 +26,8 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/notifications', function () {
-    return Inertia::render('Notifications');
-})->middleware(['auth', 'verified'])->name('notifications');
+route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 // Route::get('/users', function () {
 //     return Inertia::render('Users');
