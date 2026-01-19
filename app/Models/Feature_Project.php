@@ -18,6 +18,7 @@ class Feature_Project extends Model
         'feature_id',
         'status',
         'added_type',
+        'fp_adjustment',
     ];
 
     public function fpAdjustments()

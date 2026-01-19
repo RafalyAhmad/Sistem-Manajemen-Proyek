@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\ContractController;
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectBoardController;
 use App\Http\Controllers\ProjectController;
@@ -45,7 +45,6 @@ Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index'
 Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
 Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
 Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])->name('tickets.update-status');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -95,6 +94,6 @@ Route::get('/project-board/{project}/features/{feature}', [ProjectBoardControlle
 Route::patch('/project-board/{project}/features/{feature}/status', [ProjectBoardController::class, 'updateStatus'])->name('project.board.update-status');
 Route::delete('project-board/{project}/features/{feature}', [ProjectBoardController::class, 'destroy'])->name('project.board.destroy');
 Route::post('/project-board/{project}/features', [ProjectBoardController::class, 'addFeature'])->name('project.board.add');
-Route::post('/project-board/{project}/features/{feature}/fp-adjustment',[ProjectBoardController::class, 'storeFpAdjustment'])->name('project.board.fp-adjustment.store');
+Route::post('/project-board/{project}/features/{feature}/fp-adjustment', [ProjectBoardController::class, 'storeFpAdjustment'])->name('project.board.fp-adjustment.store');
 
 require __DIR__.'/auth.php';

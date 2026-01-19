@@ -1,6 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-export default function Show({ project, feature }) {
+export default function Show({ project, feature, fpAdjustments }) {
     const {
         working_hour_per_day,
         total_rcaf,
@@ -41,16 +41,56 @@ export default function Show({ project, feature }) {
                 Final Fee : <br />
                 Final Time :<br />
                 List Perubahan Fitur <br />
-                <table>
+                <table className="w-full border-collapse border mt-4">
                     <thead>
-                        <tr>
+                        <tr className="bg-gray-100">
                             <th className="border px-4 py-2">No</th>
                             <th className="border px-4 py-2">
                                 Deskripsi Perubahan
                             </th>
+                            <th className="border px-4 py-2">Δ FP</th>
+                            <th className="border px-4 py-2">Tanggal</th>
                             <th className="border px-4 py-2">Aksi</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        {fpAdjustments.length > 0 ? (
+                            fpAdjustments.map((item, index) => (
+                                <tr key={item.fp_adjustment_id}>
+                                    <td className="border px-4 py-2 text-center">
+                                        {index + 1}
+                                    </td>
+                                    <td className="border px-4 py-2">
+                                        {item.description}
+                                    </td>
+                                    <td className="border px-4 py-2 text-center">
+                                        {item.fp_delta > 0
+                                            ? `+${item.fp_delta}`
+                                            : item.fp_delta}
+                                    </td>
+                                    <td className="border px-4 py-2 text-center">
+                                        {new Date(
+                                            item.created_at
+                                        ).toLocaleDateString("id-ID")}
+                                    </td>
+                                    <td className="border px-4 py-2 text-center">
+                                        <button className="text-red-600 hover:underline">
+                                            Hapus
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan="5"
+                                    className="border px-4 py-2 text-center text-gray-500"
+                                >
+                                    Belum ada perubahan fitur
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
                 </table>
             </div>
         </AuthenticatedLayout>

@@ -29,6 +29,7 @@ class Project extends Model
         'line_of_code_per_day',
 
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

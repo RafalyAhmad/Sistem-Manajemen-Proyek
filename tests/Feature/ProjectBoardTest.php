@@ -2,22 +2,23 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\{Project, Feature};
+use App\Models\Feature;
+use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ProjectBoardTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testProjectBoardControllerindex()
+    public function test_project_board_controllerindex()
     {
         Project::factory()->create();
 
         $this->get('/project-board')->assertStatus(200);
     }
 
-    public function testProjectBoardControlleraddFeature()
+    public function test_project_board_controlleradd_feature()
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
@@ -32,7 +33,7 @@ class ProjectBoardTest extends TestCase
         ]);
     }
 
-    public function testProjectBoardControllerupdateStatus()
+    public function test_project_board_controllerupdate_status()
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
@@ -48,12 +49,12 @@ class ProjectBoardTest extends TestCase
         ]);
     }
 
-    public function testProjectBoardControllerstoreFpAdjustment()
+    public function test_project_board_controllerstore_fp_adjustment()
     {
         $this->assertTrue(true); // database insert tested implicitly
     }
 
-    public function testProjectBoardControllershow()
+    public function test_project_board_controllershow()
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
@@ -62,7 +63,7 @@ class ProjectBoardTest extends TestCase
             ->assertStatus(200);
     }
 
-    public function testProjectBoardControllerdestroy()
+    public function test_project_board_controllerdestroy()
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();

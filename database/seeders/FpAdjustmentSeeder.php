@@ -11,7 +11,7 @@ class FpAdjustmentSeeder extends Seeder
     {
         DB::table('fpadjustment')->insert([
             [
-                'feature_project_id' => 1, 
+                'feature_project_id' => 1,
                 'fp_delta' => 5,
                 'description' => 'Penyesuaian kompleksitas modul autentikasi',
                 'created_at' => now(),

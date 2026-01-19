@@ -2,35 +2,33 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use App\Models\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
+use Tests\TestCase;
 
 class FeatureTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testFeatureControllerindex()
-{
-    // insert manual
-   
-    $response = $this->get('/features');
+    public function test_feature_controllerindex()
+    {
+        // insert manual
 
-    $response->assertStatus(200);
-}
+        $response = $this->get('/features');
 
+        $response->assertStatus(200);
+    }
 
-    public function testFeatureControllercreate()
+    public function test_feature_controllercreate()
     {
         $this->get('/features/create')
             ->assertStatus(200)
-            ->assertInertia(fn (Assert $page) =>
-                $page->component('Features')
+            ->assertInertia(fn (Assert $page) => $page->component('Features')
             );
     }
 
-    public function testFeatureControllerstore()
+    public function test_feature_controllerstore()
     {
         $data = Feature::factory()->make()->toArray();
 
@@ -41,19 +39,18 @@ class FeatureTest extends TestCase
         ]);
     }
 
-    public function testFeatureControlleredit()
+    public function test_feature_controlleredit()
     {
         $feature = Feature::factory()->create();
 
         $this->get("/features/{$feature->feature_id}/edit")
             ->assertStatus(200)
-            ->assertInertia(fn (Assert $page) =>
-                $page->component('Feature/Edit')
-                     ->has('feature')
+            ->assertInertia(fn (Assert $page) => $page->component('Feature/Edit')
+                ->has('feature')
             );
     }
 
-    public function testFeatureControllerupdate()
+    public function test_feature_controllerupdate()
     {
         $feature = Feature::factory()->create();
 
@@ -67,7 +64,7 @@ class FeatureTest extends TestCase
         ]);
     }
 
-    public function testFeatureControllerdestroy()
+    public function test_feature_controllerdestroy()
     {
         $feature = Feature::factory()->create();
 

@@ -2,24 +2,20 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\User;
-use App\Models\Project;
-use App\Models\Feature;
-
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testUserControllerindex()
+    public function test_user_controllerindex()
     {
         $this->get('/users')->assertStatus(200);
     }
 
-    public function testUserControllerstore()
+    public function test_user_controllerstore()
     {
         $this->post('/users', [
             'name' => 'Test',
@@ -33,7 +29,7 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function testUserControllerupdate()
+    public function test_user_controllerupdate()
     {
         $user = User::factory()->create();
 
@@ -48,7 +44,7 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function testUserControllerdestroy()
+    public function test_user_controllerdestroy()
     {
         $user = User::factory()->create();
 

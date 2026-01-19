@@ -2,26 +2,28 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\{Meeting, Project, User};
+use App\Models\Meeting;
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Tests\TestCase;
 
 class MeetingTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testMeetingControllerindex()
+    public function test_meeting_controllerindex()
     {
         $this->get('/meetings')->assertStatus(200);
     }
 
-    public function testMeetingControllercreate()
+    public function test_meeting_controllercreate()
     {
         $this->get('/meetings/create')->assertStatus(200);
     }
 
-    public function testMeetingControllerstore()
+    public function test_meeting_controllerstore()
     {
         Mail::fake();
 
@@ -43,7 +45,7 @@ class MeetingTest extends TestCase
         ]);
     }
 
-    public function testMeetingControlleredit()
+    public function test_meeting_controlleredit()
     {
         $meeting = Meeting::factory()->create();
 
@@ -51,7 +53,7 @@ class MeetingTest extends TestCase
             ->assertStatus(200);
     }
 
-    public function testMeetingControllerupdate()
+    public function test_meeting_controllerupdate()
     {
         $meeting = Meeting::factory()->create();
 
@@ -65,7 +67,7 @@ class MeetingTest extends TestCase
         ]);
     }
 
-    public function testMeetingControllerdestroy()
+    public function test_meeting_controllerdestroy()
     {
         $meeting = Meeting::factory()->create();
 

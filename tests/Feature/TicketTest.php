@@ -2,27 +2,25 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\Ticket;
-use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class TicketTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testTicketControllerindex()
+    public function test_ticket_controllerindex()
     {
         $this->get('/tickets')->assertStatus(200);
     }
 
-    public function testTicketControllercreate()
+    public function test_ticket_controllercreate()
     {
         $this->get('/tickets/create')->assertStatus(200);
     }
 
-    public function testTicketControllerstore()
+    public function test_ticket_controllerstore()
     {
         $ticket = Ticket::factory()->make();
 
@@ -33,7 +31,7 @@ class TicketTest extends TestCase
         ]);
     }
 
-    public function testTicketControllerupdateStatus()
+    public function test_ticket_controllerupdate_status()
     {
         $ticket = Ticket::factory()->create();
 
@@ -46,7 +44,7 @@ class TicketTest extends TestCase
         ]);
     }
 
-    public function testTicketControllerupdate()
+    public function test_ticket_controllerupdate()
     {
         $ticket = Ticket::factory()->create();
 
@@ -60,7 +58,7 @@ class TicketTest extends TestCase
         ]);
     }
 
-    public function testTicketControllerdestroy()
+    public function test_ticket_controllerdestroy()
     {
         $ticket = Ticket::factory()->create();
 
@@ -71,4 +69,3 @@ class TicketTest extends TestCase
         ]);
     }
 }
-

@@ -6,7 +6,6 @@ use App\Models\Feature;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -19,6 +18,7 @@ class ProjectController extends Controller
             'features' => Feature::select('feature_id as id', 'feature_name', 'feature_cfp')->get(),
         ]);
     }
+
     public function show(Project $project)
     {
         $project->load('features');
@@ -27,6 +27,7 @@ class ProjectController extends Controller
             'project' => $project,
         ]);
     }
+
     public function create()
     {
         return Inertia::render('Projects/Create', [
@@ -34,6 +35,7 @@ class ProjectController extends Controller
             'features' => Feature::select('feature_id as id', 'description')->get(),
         ]);
     }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -56,20 +58,21 @@ class ProjectController extends Controller
             'features' => 'required|array',
             'features.*' => 'exists:features,feature_id',
         ]);
-    $project = Project::create($validatedData);
-$pivotData = [];
+        $project = Project::create($validatedData);
+        $pivotData = [];
 
-foreach ($request->features as $featureId) {
-    $pivotData[$featureId] = [
-        'status' => 'to_do',
-        'fp_adjustment' => 0,
-        'added_type' => 'baseline',
-    ];
-}
+        foreach ($request->features as $featureId) {
+            $pivotData[$featureId] = [
+                'status' => 'to_do',
+                'fp_adjustment' => 0,
+                'added_type' => 'baseline',
+            ];
+        }
 
-$project->features()->sync($pivotData);
+        $project->features()->sync($pivotData);
 
     }
+
     public function edit(Project $project)
     {
         return Inertia::render('Projects/Edit', [
@@ -78,6 +81,7 @@ $project->features()->sync($pivotData);
             'features' => Feature::select('feature_id', 'feature_name')->get(),
         ]);
     }
+
     public function update(Request $request, Project $project)
     {
         $validatedData = $request->validate([
@@ -104,6 +108,7 @@ $project->features()->sync($pivotData);
         $project->features()->sync($request->features);
 
     }
+
     public function destroy(Project $project)
     {
         $project->features()->detach(); // bersihkan pivot

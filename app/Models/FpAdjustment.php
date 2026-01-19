@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FpAdjustment extends Model
 {
     protected $table = 'fpadjustment';
+
     protected $primaryKey = 'fp_adjustment_id';
 
     protected $fillable = [
@@ -14,6 +15,7 @@ class FpAdjustment extends Model
         'fp_delta',
         'description',
         'created_at',
+        'updated_at',
     ];
 
     public function featureProject()
