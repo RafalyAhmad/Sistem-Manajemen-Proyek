@@ -17,6 +17,7 @@ class UserTest extends TestCase
 
     public function test_user_controllerstore()
     {
+        $this->withoutExceptionHandling();
         $this->post('/users', [
             'name' => 'Test',
             'email' => 'test@mail.com',
