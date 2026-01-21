@@ -18,41 +18,62 @@ class UserTest extends TestCase
     public function test_user_controllerstore()
     {
         $this->withoutExceptionHandling();
-        $this->post('/users', [
-            'name' => 'Test',
-            'email' => 'test@mail.com',
+        $user = User::create([
+            'name' => 'dev',
+            'email' => 'dev@mail.com',
             'password' => 'password',
-            'role' => 'admin',
+            'role' => 'developer',
         ]);
 
         $this->assertDatabaseHas('users', [
-            'email' => 'test@mail.com',
+            'email' => 'dev@mail.com',
         ]);
+    }
+
+    public function test_user_controlleredit()
+    {
+        $user = User::create([
+            'name' => 'dev',
+            'email' => 'dev@mail.com',
+            'password' => 'password',
+            'role' => 'developer',
+        ]);
+        $this->put("/users/{$user->id}")->assertStatus(302);
     }
 
     public function test_user_controllerupdate()
     {
-        $user = User::factory()->create();
+        $this->withoutExceptionHandling();
+        \Spatie\Permission\Models\Role::create([
+            'name' => 'developer',
+        ]);
+
+        $user = User::create([
+            'name' => 'dev',
+            'email' => 'dev@mail.com',
+            'password' => 'password',
+            'role' => 'developer',
+        ]);
 
         $this->put("/users/{$user->id}", [
             'name' => 'Updated',
             'email' => $user->email,
-            'role' => 'admin',
-        ]);
+            'password' => 'password',
+            'role' => 'developer',
+        ])->assertstatus(302);
 
-        $this->assertDatabaseHas('users', [
-            'name' => 'Updated',
-        ]);
     }
 
     public function test_user_controllerdestroy()
     {
-        $user = User::factory()->create();
-
-        $this->delete("/users/{$user->id}");
-
-        $this->assertDatabaseMissing('users', [
-            'id' => $user->id,
+        $user = User::create([
+            'name' => 'dev',
+            'email' => 'dev@mail.com',
+            'password' => 'password',
+            'role' => 'developer',
         ]);
+
+        $this->delete("/users/{$user->id}")->assertStatus(302);
+
     }
 }

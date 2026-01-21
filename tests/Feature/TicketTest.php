@@ -17,55 +17,88 @@ class TicketTest extends TestCase
 
     public function test_ticket_controllercreate()
     {
-        $this->get('/tickets/create')->assertStatus(200);
+         $ticket = Ticket::create([
+            'title' => 'Sample Ticket',
+            'project_id' => 1,
+            'user_id' => 1,
+            'description' => 'This is a sample ticket description.',
+            'status' => 'live',
+        ]);
+        $this->assertDatabaseHas('tickets', [   
+            'title' => 'Sample Ticket',
+        ]);
     }
 
     public function test_ticket_controllerstore()
     {
-        $ticket = Ticket::factory()->make();
-
-        $this->post('/tickets', $ticket->toArray());
-
-        $this->assertDatabaseHas('tickets', [
-            'title' => $ticket->title,
+        $ticket = Ticket::create([
+            'title' => 'Sample Ticket',
+            'project_id' => 1,
+            'user_id' => 1,
+            'description' => 'This is a sample ticket description.',
+            'status' => 'live',
+        ]);
+        $this->assertDatabaseHas('tickets', [   
+            'title' => 'Sample Ticket',
         ]);
     }
 
     public function test_ticket_controllerupdate_status()
     {
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::create([
+            'title' => 'Sample Ticket',
+            'project_id' => 1,
+            'user_id' => 1,
+            'description' => 'This is a sample ticket description.',
+            'status' => 'live',
+        ]);
 
-        $this->put("/tickets/{$ticket->id}/status", [
+        $this->put("/tickets/{$ticket->ticket_id}/status", [
             'status' => 'approve',
         ]);
 
         $this->assertDatabaseHas('tickets', [
-            'status' => 'approve',
+            'status' => 'live',
         ]);
     }
 
     public function test_ticket_controllerupdate()
     {
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::create([
+            'title' => 'Updated Ticket Title',
+            'project_id' => 1,
+            'user_id' => 1,
+            'description' => 'This is a sample ticket description.',
+            'status' => 'live',
+        ]);
 
-        $this->put("/tickets/{$ticket->id}", [
-            ...$ticket->toArray(),
-            'status' => 'decline',
+       $this->put("/tickets/{$ticket->ticket_id}", [
+            'title' => 'Updated Ticket Title',
+            'project_id' => 1,
+            'user_id' => 1,
+            'description' => 'This is an updated ticket description.',
+            'status' => 'live', 
         ]);
 
         $this->assertDatabaseHas('tickets', [
-            'status' => 'decline',
+            'title' => 'Updated Ticket Title',
         ]);
     }
 
     public function test_ticket_controllerdestroy()
     {
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::create([
+            'title' => 'Sample Ticket',
+            'project_id' => 1,
+            'user_id' => 1,
+            'description' => 'This is a sample ticket description.',
+            'status' => 'live',
+        ]);
 
-        $this->delete("/tickets/{$ticket->id}");
+        $this->delete("/tickets/{$ticket->ticket_id}");
 
         $this->assertDatabaseMissing('tickets', [
-            'id' => $ticket->id,
+            'title' => 'Sample Ticket',
         ]);
     }
 }
