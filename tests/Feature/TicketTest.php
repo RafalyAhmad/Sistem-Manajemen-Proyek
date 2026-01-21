@@ -17,14 +17,14 @@ class TicketTest extends TestCase
 
     public function test_ticket_controllercreate()
     {
-         $ticket = Ticket::create([
+        $ticket = Ticket::create([
             'title' => 'Sample Ticket',
             'project_id' => 1,
             'user_id' => 1,
             'description' => 'This is a sample ticket description.',
             'status' => 'live',
         ]);
-        $this->assertDatabaseHas('tickets', [   
+        $this->assertDatabaseHas('tickets', [
             'title' => 'Sample Ticket',
         ]);
     }
@@ -38,7 +38,7 @@ class TicketTest extends TestCase
             'description' => 'This is a sample ticket description.',
             'status' => 'live',
         ]);
-        $this->assertDatabaseHas('tickets', [   
+        $this->assertDatabaseHas('tickets', [
             'title' => 'Sample Ticket',
         ]);
     }
@@ -72,12 +72,12 @@ class TicketTest extends TestCase
             'status' => 'live',
         ]);
 
-       $this->put("/tickets/{$ticket->ticket_id}", [
+        $this->put("/tickets/{$ticket->ticket_id}", [
             'title' => 'Updated Ticket Title',
             'project_id' => 1,
             'user_id' => 1,
             'description' => 'This is an updated ticket description.',
-            'status' => 'live', 
+            'status' => 'live',
         ]);
 
         $this->assertDatabaseHas('tickets', [

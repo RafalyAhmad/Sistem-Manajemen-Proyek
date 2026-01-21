@@ -13,8 +13,7 @@ class ProjectBoardTest extends TestCase
 
     public function test_project_board_controllerindex()
     {
-        Project::factory()->create();
-
+        $this->withoutExceptionHandling();
         $this->get('/project-board')->assertStatus(200);
     }
 
