@@ -20,7 +20,7 @@ export default function Widget({ children, className = "", title = null }) {
             )}
 
             {/* Konten Utama (Berupa children, bisa diisi angka, chart, atau tabel) */}
-            <div className={`p-4 ${!title && "h-full"}`}>{children}</div>
+            <div className="p-4">{children}</div>
         </div>
     );
 }

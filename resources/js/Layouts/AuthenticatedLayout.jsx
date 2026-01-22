@@ -20,7 +20,7 @@ export default function AuthenticatedLayout({ header, children }) {
             <div className="flex pt-16">
                 <Sidebar showing={showingSidebar} toggle={toggleSidebar} />
 
-                <main className="flex-1 sm:ml-64 p-4">
+                <main className="flex-1 min-w-0 sm:ml-64 p-4">
                     {header && (
                         <div className="mx-auto mb-4">
                             <div className="flex justify-between items-start flex-wrap gap-4">
