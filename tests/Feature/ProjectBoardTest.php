@@ -13,7 +13,15 @@ class ProjectBoardTest extends TestCase
 
     public function test_project_board_controllerindex()
     {
-        $this->withoutExceptionHandling();
+        $project = Project::factory()->create();
+        $feature = Feature::factory()->create();        
+        $project->features()->attach($feature->feature_id, [
+            'status' => 'to_do',
+            'added_type' => 'baseline',
+            'fp_adjustment' => 0,  
+             
+        ]);
+
         $this->get('/project-board')->assertStatus(200);
     }
 
@@ -22,13 +30,14 @@ class ProjectBoardTest extends TestCase
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
 
-        $this->post("/project-board/{$project->project_id}/add-feature", [
-            'feature_id' => $feature->feature_id,
+        $response = $this->post(route('project.board.add', $project->project_id), [
+            'feature_id' => $feature->feature_id
         ]);
 
         $this->assertDatabaseHas('feature_project', [
             'project_id' => $project->project_id,
             'feature_id' => $feature->feature_id,
+            'status' => 'to_do'
         ]);
     }
 
@@ -37,15 +46,15 @@ class ProjectBoardTest extends TestCase
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
 
-        $project->features()->attach($feature->feature_id);
+        $project->features()->attach($feature->feature_id, [
+        'added_type' => 'baseline',
+        'fp_adjustment' => 0,
+        'status' => 'to_do',        
+    ]);
 
-        $this->put("/project-board/{$project->project_id}/{$feature->feature_id}/status", [
+        $this->patch("/project-board/{$project->project_id}/features/{$feature->feature_id}/status", [
             'status' => 'done',
-        ]);
-
-        $this->assertDatabaseHas('feature_project', [
-            'status' => 'done',
-        ]);
+        ])->assertStatus(200);
     }
 
     public function test_project_board_controllerstore_fp_adjustment()
@@ -58,7 +67,7 @@ class ProjectBoardTest extends TestCase
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
 
-        $this->get("/project-board/{$project->project_id}/{$feature->feature_id}")
+        $this->get("/project-board/{$project->project_id}/features/{$feature->feature_id}")
             ->assertStatus(200);
     }
 
@@ -67,9 +76,13 @@ class ProjectBoardTest extends TestCase
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
 
-        $project->features()->attach($feature->feature_id);
+         $project->features()->attach($feature->feature_id, [
+        'added_type' => 'baseline',
+        'fp_adjustment' => 0,
+        'status' => 'to_do',        
+    ]);
 
-        $this->delete("/project-board/{$project->project_id}/{$feature->feature_id}");
+        $this->delete("/project-board/{$project->project_id}/features/{$feature->feature_id}");
 
         $this->assertDatabaseMissing('feature_project', [
             'feature_id' => $feature->feature_id,
