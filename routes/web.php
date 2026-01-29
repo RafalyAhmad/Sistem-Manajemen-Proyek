@@ -92,6 +92,7 @@ Route::get('/contracts/{contract}/pdf', [ContractController::class, 'generatePdf
 Route::get('/project-board', [ProjectBoardController::class, 'index'])->name('project.board');
 Route::get('/project-board/{project}/features/{feature}', [ProjectBoardController::class, 'show'])->name('project.board.show');
 Route::patch('/project-board/{project}/features/{feature}/status', [ProjectBoardController::class, 'updateStatus'])->name('project.board.update-status');
+Route::put('/project-board/{project}/features/{feature}/fp-adjustment', [ProjectBoardController::class, 'storeFpAdjustment'])->name('project.board.update-fp-adjustment');
 Route::delete('project-board/{project}/features/{feature}', [ProjectBoardController::class, 'destroy'])->name('project.board.destroy');
 Route::post('/project-board/{project}/features', [ProjectBoardController::class, 'addFeature'])->name('project.board.add');
 Route::post('/project-board/{project}/features/{feature}/fp-adjustment', [ProjectBoardController::class, 'storeFpAdjustment'])->name('project.board.fp-adjustment.store');

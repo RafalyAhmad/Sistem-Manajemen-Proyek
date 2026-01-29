@@ -60,20 +60,23 @@ class ProjectBoardController extends Controller
 
     }
 
-    public function storeFpAdjustment(Request $request)
-    {
-        $request->validate([
-            'feature_project_id' => 'required|exists:feature_project,feature_project_id',
-            'fp_delta' => 'required|integer',
-            'description' => 'required|string',
-        ]);
+   public function storeFpAdjustment(Project $project, Feature $feature, Request $request)
+{
+    $request->validate([
+        'fp_adjustment' => 'required|integer',
+    ]);
 
-        FpAdjustment::create([
-            'feature_project_id' => $request->feature_project_id,
-            'fp_delta' => $request->fp_delta,
-            'description' => $request->description,
-        ]);
-    }
+    $featureProject = Feature_Project::where('project_id', $project->project_id)
+        ->where('feature_id', $feature->feature_id)
+        ->firstOrFail();
+
+    $featureProject->update([
+        'fp_adjustment' => $request->fp_adjustment,
+    ]);
+
+    return back();
+}
+
 
     public function show(Project $project, Feature $feature, Feature_Project $featureProject)
     {
@@ -82,14 +85,32 @@ class ProjectBoardController extends Controller
             'fpAdjustments',    // histori perubahan
         ]);
 
-        $project->load('features');
+         // Ambil feature LEWAT relasi project (ini kuncinya)
+        $feature = $project->features()
+            ->where('features.feature_id', $feature->feature_id)
+            ->firstOrFail();
+
+        // Ambil feature_project ID dari pivot
+        $featureProjectId = $feature->pivot->feature_project_id ?? null;
+
+        $fpAdjustments = [];
+        $fpAdjustmentTotal = 0;
+
+        if ($featureProjectId) {
+            $featureProject = Feature_Project::with('fpAdjustments')
+                ->find($featureProjectId);
+
+            $fpAdjustments = $featureProject->fpAdjustments;
+            $fpAdjustmentTotal = $featureProject->fpAdjustments->sum('fp_delta');
+        }
 
         return Inertia::render('ProjectBoardShow', [
             'project' => $project,
             'feature' => $feature,
             'fpAdjustments' => $featureProject->fpAdjustments,
-        ]);
+            'fpAdjustmentTotal' => $featureProject->fpAdjustments->sum('fp_delta'),
 
+        ]);
     }
 
     public function destroy(Project $project, Feature $feature)
