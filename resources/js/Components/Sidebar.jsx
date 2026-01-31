@@ -1,5 +1,5 @@
 import NavLink from "@/Components/NavLink";
-
+import { usePage } from "@inertiajs/react";
 // Komponen untuk Item dengan counter/badge
 const SidebarItem = ({ href, active, children, count, icon }) => (
     <NavLink
@@ -138,6 +138,9 @@ export default function Sidebar({ showing, toggle }) {
         </svg>
     );
 
+    const { auth } = usePage().props;
+    const role = auth?.user?.role;
+
     return (
         // Default (Mobile): Geser ke kiri (-translate-x-full)
         // Desktop (sm ke atas): Selalu tampil (translate-x-0)
@@ -149,82 +152,92 @@ export default function Sidebar({ showing, toggle }) {
         `}
         >
             {/* Menu Utama */}
-            <SidebarSection title="Project Management">
-                <SidebarItem
-                    href={route("dashboard")}
-                    active={route().current("dashboard")}
-                    icon={<HomeIcon />}
-                >
-                    Dashboard
-                </SidebarItem>
-                <SidebarItem
-                    href={route("projects.index")}
-                    active={route().current("projects.index")}
-                    icon={<ProjectsIcon />}
-                >
-                    Projects
-                </SidebarItem>
-                <SidebarItem
-                    href={route("project.board")}
-                    active={route().current("project.board")}
-                    icon={<ProjectsIcon />}
-                >
-                    Project Board
-                </SidebarItem>
-                <SidebarItem
-                    href={route("features.index")}
-                    active={route().current("features.index")}
-                    icon={<ProjectsIcon />}
-                >
-                    Project Timeline
-                </SidebarItem>
-                <SidebarItem
-                    href={route("tickets.index")}
-                    active={route().current("tickets.index")}
-                    icon={<TicketsIcon />}
-                >
-                    Tickets
-                </SidebarItem>
-                <SidebarItem
-                    href={route("notifications.index")}
-                    active={route().current("notifications.index")}
-                    icon={<NotificationsIcon />}
-                >
-                    Notifications
-                </SidebarItem>
-                <SidebarItem
-                    href={route("meetings.index")}
-                    active={route().current("meetings.index")}
-                    icon={<ProjectsIcon />}
-                >
-                    Meetings
-                </SidebarItem>
-                <SidebarItem
-                    href={route("contracts.index")}
-                    active={route().current("contracts.index")}
-                    icon={<ProjectsIcon />}
-                >
-                    Contracts
-                </SidebarItem>
-            </SidebarSection>
+            {(role === "project manager" ||
+                role === "developer" ||
+                role === "client") && (
+                <SidebarSection title="All Menu">
+                    <SidebarItem
+                        href={route("project.board")}
+                        active={route().current("project.board")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Project Board
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("features.index")}
+                        active={route().current("features.index")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Project Timeline
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("tickets.index")}
+                        active={route().current("tickets.index")}
+                        icon={<TicketsIcon />}
+                    >
+                        Tickets
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("notifications.index")}
+                        active={route().current("notifications.index")}
+                        icon={<NotificationsIcon />}
+                    >
+                        Notifications
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("meetings.index")}
+                        active={route().current("meetings.index")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Meetings
+                    </SidebarItem>
+                </SidebarSection>
+            )}
+            {(role === "project manager" || role === "developer") && (
+                <SidebarSection title="PM & Dev Menu">
+                    <SidebarItem
+                        href={route("features.index")}
+                        active={route().current("features.index")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Feature Repository
+                    </SidebarItem>
+                </SidebarSection>
+            )}
 
             {/* Bagian Settings */}
-            <SidebarSection title="Settings">
-                <SidebarItem
-                    href={route("features.index")}
-                    active={route().current("features.index")}
-                    icon={<ProjectsIcon />}
-                >
-                    Feature Repository
-                </SidebarItem>
-                <SidebarItem
-                    href={route("users.index")}
-                    active={route().current("users.index")}
-                    icon={<UsersIcon />}
-                >
-                    Users
-                </SidebarItem>
-            </SidebarSection>
+            {role === "project manager" && (
+                <SidebarSection title="PM Settings">
+                    <SidebarItem
+                        href={route("dashboard")}
+                        active={route().current("dashboard")}
+                        icon={<HomeIcon />}
+                    >
+                        Dashboard
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("projects.index")}
+                        active={route().current("projects.index")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Projects
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("users.index")}
+                        active={route().current("users.index")}
+                        icon={<UsersIcon />}
+                    >
+                        Users
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("contracts.index")}
+                        active={route().current("contracts.index")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Contracts
+                    </SidebarItem>
+                </SidebarSection>
+            )}
         </div>
     );
 }
