@@ -19,7 +19,7 @@ export default function ProjectManagement({ projects, features }) {
         reset,
     } = useForm({
         project_id: "",
-        user_id: "",
+        user_ids: [],
         project_name: "",
         initial_project_fee: "",
         final_project_fee: "",
@@ -102,7 +102,7 @@ export default function ProjectManagement({ projects, features }) {
     const editProject = (project) => {
         setData({
             project_id: project.project_id,
-            user_id: project.user_id,
+            user_ids: project.users?.map((u) => u.id) ?? [],
             project_name: project.project_name,
             features: project.features?.map((f) => f.id) ?? [],
             initial_project_fee: project.initial_project_fee,
@@ -138,18 +138,54 @@ export default function ProjectManagement({ projects, features }) {
                     {/* USER */}
                     <div>
                         <label className="block mb-1 font-semibold">User</label>
-                        <select
-                            className="w-full border rounded px-3 py-2"
-                            value={data.user_id}
-                            onChange={(e) => setData("user_id", e.target.value)}
-                        >
-                            <option value="">-- Pilih User --</option>
-                            {users?.map((user) => (
-                                <option key={user.id} value={user.id}>
-                                    {user.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div>
+                            <div className="border rounded p-3 space-y-2 max-h-40 overflow-y-auto">
+                                {users?.map((user) => {
+                                    const selected = data.user_ids;
+
+                                    return (
+                                        <label
+                                            key={user.id}
+                                            className="flex items-center gap-2"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selected.includes(
+                                                    user.id,
+                                                )}
+                                                onChange={() => {
+                                                    let updated;
+
+                                                    if (
+                                                        selected.includes(
+                                                            user.id,
+                                                        )
+                                                    ) {
+                                                        updated =
+                                                            selected.filter(
+                                                                (id) =>
+                                                                    id !==
+                                                                    user.id,
+                                                            );
+                                                    } else {
+                                                        updated = [
+                                                            ...selected,
+                                                            user.id,
+                                                        ];
+                                                    }
+
+                                                    setData(
+                                                        "user_ids",
+                                                        updated,
+                                                    );
+                                                }}
+                                            />
+                                            {user.name}
+                                        </label>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
 
                     {/* PROJECT NAME */}
@@ -185,18 +221,18 @@ export default function ProjectManagement({ projects, features }) {
                                             type="checkbox"
                                             value={feature.id}
                                             checked={selected.includes(
-                                                feature.id
+                                                feature.id,
                                             )}
                                             onChange={() => {
                                                 let updated;
 
                                                 if (
                                                     selected.includes(
-                                                        feature.id
+                                                        feature.id,
                                                     )
                                                 ) {
                                                     updated = selected.filter(
-                                                        (f) => f !== feature.id
+                                                        (f) => f !== feature.id,
                                                     );
                                                 } else {
                                                     updated = [
@@ -307,7 +343,7 @@ export default function ProjectManagement({ projects, features }) {
                             onChange={(e) =>
                                 CalculateTime(
                                     "working_hour_per_day",
-                                    e.target.value
+                                    e.target.value,
                                 )
                             }
                         />
@@ -325,7 +361,7 @@ export default function ProjectManagement({ projects, features }) {
                             onChange={(e) =>
                                 CalculateFee(
                                     "development_cost_per_day",
-                                    e.target.value
+                                    e.target.value,
                                 )
                             }
                         />
@@ -343,7 +379,7 @@ export default function ProjectManagement({ projects, features }) {
                             onChange={(e) =>
                                 CalculateTime(
                                     "line_of_code_per_day",
-                                    e.target.value
+                                    e.target.value,
                                 )
                             }
                         />
@@ -390,7 +426,7 @@ export default function ProjectManagement({ projects, features }) {
                             onChange={(e) =>
                                 CalculateFee(
                                     "initial_project_time",
-                                    e.target.value
+                                    e.target.value,
                                 )
                             }
                         />
@@ -408,7 +444,7 @@ export default function ProjectManagement({ projects, features }) {
                             onChange={(e) =>
                                 CalculateFee(
                                     "final_project_time",
-                                    e.target.value
+                                    e.target.value,
                                 )
                             }
                         />
@@ -471,7 +507,7 @@ export default function ProjectManagement({ projects, features }) {
                             {projects.map((p) => (
                                 <tr key={p.project_id}>
                                     <td className="border p-2">
-                                        {p.user?.name}
+                                        {p.users?.map((u) => u.name).join(", ")}
                                     </td>
                                     <td className="border p-2">
                                         {p.project_name}

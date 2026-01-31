@@ -19,7 +19,7 @@ class Ticket extends Model
         'timestamps',
     ];
 
-    public function user()
+    public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

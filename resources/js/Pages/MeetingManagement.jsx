@@ -4,7 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Widget from "@/Components/Widget";
 
 export default function MeetingManagement() {
-    const { meetings, user, project } = usePage().props;
+    const { meetings, projects } = usePage().props;
 
     const {
         data,
@@ -15,7 +15,6 @@ export default function MeetingManagement() {
         reset,
     } = useForm({
         meeting_id: "",
-        user_id: "",
         project_id: "",
         title: "",
         description: "",
@@ -41,13 +40,12 @@ export default function MeetingManagement() {
     const editMeeting = (meeting) => {
         setData({
             meeting_id: meeting.meeting_id,
-            user_id: meeting.user_id,
             project_id: meeting.project_id,
             title: meeting.title,
             description: meeting.description,
             notulensi: meeting.notulensi,
             meeting_time: meeting.meeting_time,
-            email_to: meeting.email_to,
+            email_to: meeting.email_to ?? "",
         });
     };
 
@@ -62,28 +60,11 @@ export default function MeetingManagement() {
             <Widget>
                 <h1 className="text-2xl font-bold mb-6">Meeting Management</h1>
 
-                {/* FORM */}
+                {/* ================= FORM ================= */}
                 <form
                     onSubmit={submit}
                     className="grid grid-cols-2 gap-4 mb-10"
                 >
-                    {/* USER */}
-                    <div>
-                        <label className="font-semibold mb-1 block">User</label>
-                        <select
-                            className="w-full border rounded px-3 py-2"
-                            value={data.user_id}
-                            onChange={(e) => setData("user_id", e.target.value)}
-                        >
-                            <option value="">-- Pilih User --</option>
-                            {user.map((u) => (
-                                <option key={u.id} value={u.id}>
-                                    {u.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
                     {/* PROJECT */}
                     <div>
                         <label className="font-semibold mb-1 block">
@@ -97,7 +78,7 @@ export default function MeetingManagement() {
                             }
                         >
                             <option value="">-- Pilih Project --</option>
-                            {project.map((p) => (
+                            {projects.map((p) => (
                                 <option key={p.project_id} value={p.project_id}>
                                     {p.project_name}
                                 </option>
@@ -133,10 +114,10 @@ export default function MeetingManagement() {
                         />
                     </div>
 
-                    {/* EMAIL TO */}
+                    {/* EMAIL TAMBAHAN */}
                     <div>
                         <label className="font-semibold mb-1 block">
-                            Kirim ke Email
+                            Email Tambahan (opsional)
                         </label>
                         <input
                             type="email"
@@ -160,7 +141,7 @@ export default function MeetingManagement() {
                             onChange={(e) =>
                                 setData("description", e.target.value)
                             }
-                        ></textarea>
+                        />
                     </div>
 
                     {/* NOTULENSI */}
@@ -175,7 +156,7 @@ export default function MeetingManagement() {
                             onChange={(e) =>
                                 setData("notulensi", e.target.value)
                             }
-                        ></textarea>
+                        />
                     </div>
 
                     {/* BUTTON */}
@@ -191,16 +172,15 @@ export default function MeetingManagement() {
                     </div>
                 </form>
 
-                {/* TABLE */}
+                {/* ================= TABLE ================= */}
                 <div className="overflow-x-auto">
                     <table className="w-full border text-center">
                         <thead className="bg-gray-200">
                             <tr>
-                                <th className="p-2 border">User</th>
                                 <th className="p-2 border">Project</th>
                                 <th className="p-2 border">Title</th>
                                 <th className="p-2 border">Waktu</th>
-                                <th className="p-2 border">Email</th>
+                                <th className="p-2 border">Email Tambahan</th>
                                 <th className="p-2 border">Aksi</th>
                             </tr>
                         </thead>
@@ -211,9 +191,6 @@ export default function MeetingManagement() {
                                     key={m.meeting_id}
                                     className="hover:bg-gray-50"
                                 >
-                                    <td className="border p-2">
-                                        {m.user?.name}
-                                    </td>
                                     <td className="border p-2">
                                         {m.project?.project_name}
                                     </td>

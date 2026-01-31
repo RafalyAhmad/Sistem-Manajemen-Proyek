@@ -12,7 +12,6 @@ class Project extends Model
     protected $primaryKey = 'project_id';
 
     protected $fillable = [
-        'user_id',
         'project_name',
         'initial_project_fee',
         'final_project_fee',
@@ -30,14 +29,29 @@ class Project extends Model
 
     ];
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id');
     }
 
     public function features()
     {
         return $this->belongsToMany(Feature::class, 'feature_project', 'project_id', 'feature_id')
             ->withpivot('status', 'added_type', 'fp_adjustment');
+    }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class, 'project_id', 'project_id');
+    }
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class, 'project_id', 'project_id');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'project_id', 'project_id');
     }
 }

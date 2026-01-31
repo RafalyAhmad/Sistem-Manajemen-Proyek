@@ -14,40 +14,70 @@ class MeetingController extends Controller
 {
     public function index()
     {
-        $meetings = Meeting::with('user', 'project')->get();
+        // hanya tampilkan meeting dari project yang diikuti user login
+        $meetings = Meeting::with('project')
+            ->whereHas('project.users', function ($q) {
+                $q->where('user_id', auth()->id());
+            })
+            ->get();
 
         return Inertia::render('MeetingManagement', [
             'meetings' => $meetings,
-            'user' => User::select('id', 'name')->get(),
-            'project' => Project::select('project_id', 'project_name')->get(),
+            'projects' => Project::select('project_id', 'project_name')->get(),
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Meetings');
+        return Inertia::render('Meetings', [
+            'projects' => auth()->user()
+                ->projects()
+                ->select('project_id', 'project_name')
+                ->get(),
+        ]);
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'project_id' => 'required|exists:projects,project_id',
-            'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'notulensi' => 'required|string|max:255',
             'meeting_time' => 'required|date',
-            'email_to' => 'required|string|max:255',
+            'email_to' => 'nullable|string|max:255', 
         ]);
+
         $meeting = Meeting::create($validatedData);
-        Mail::to($validatedData['email_to'])
-            ->send(new MeetingInvitationMail($meeting));
+
+        // ambil semua user dalam project
+        $projectUsers = Project::with('users')
+            ->find($request->project_id)
+            ->users;
+
+        $emails = $projectUsers
+            ->pluck('email')
+            ->filter()
+            ->toArray();
+
+        //  tambah email manual kalau diisi
+        if (!empty($validatedData['email_to'])) {
+            $emails[] = $validatedData['email_to'];
+        }
+
+        // kirim ke banyak email
+        if (!empty($emails)) {
+            Mail::to($emails)->send(new MeetingInvitationMail($meeting));
+        }
+
+        return redirect()->route('meetings.index');
     }
 
     public function edit(Meeting $meeting)
     {
         return Inertia::render('meeting/Edit', [
-            'meeting' => $meeting,
+            'meeting' => $meeting->load('project'),
+            'projects' => Project::select('project_id', 'project_name')->get(),
         ]);
     }
 
@@ -55,19 +85,22 @@ class MeetingController extends Controller
     {
         $validatedData = $request->validate([
             'project_id' => 'required|exists:projects,project_id',
-            'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'notulensi' => 'required|string|max:255',
             'meeting_time' => 'required|date',
-            'email_to' => 'required|string|max:255',
+            'email_to' => 'nullable|string|max:255',
         ]);
 
         $meeting->update($validatedData);
+
+        return redirect()->route('meetings.index');
     }
 
     public function destroy(Meeting $meeting)
     {
         $meeting->delete();
+
+        return redirect()->route('meetings.index');
     }
 }

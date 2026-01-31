@@ -11,15 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tickets', function (Blueprint $table) {
-            $table->id('ticket_id');
-            $table->foreignId('user_id');
-            $table->foreignId('project_id');
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->enum('status', ['live', 'approve', 'decline'])->default('live');
-            $table->timestamps();
-        });
+    Schema::create('tickets', function (Blueprint $table) {
+    $table->id('ticket_id');
+
+    $table->foreignId('user_id')
+        ->constrained('users')
+        ->cascadeOnDelete();
+
+    $table->foreignId('project_id')
+        ->constrained('projects', 'project_id')
+        ->cascadeOnDelete();
+
+    $table->string('title');
+    $table->text('description')->nullable();
+
+    $table->enum('status', ['live', 'approve', 'decline'])
+        ->default('live');
+
+    $table->timestamps();
+});
+
     }
 
     /**

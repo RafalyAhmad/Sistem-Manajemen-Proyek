@@ -2,7 +2,7 @@ import Buttons from "@/Components/Buttons";
 
 export default function TicketCard({ ticket, statusType, onAction }) {
     // Sesuaikan dengan struktur data backend Anda
-    const { ticket_id, title, description, user, created_at } = ticket;
+    const { ticket_id, title, description, creator, created_at } = ticket;
 
     const formatTanggal = (dateString) => {
         return new Date(dateString).toLocaleDateString("id-ID", {
@@ -86,7 +86,8 @@ export default function TicketCard({ ticket, statusType, onAction }) {
                         {title}
                     </h4>
                     <p className="text-xs text-gray-500 mt-1">
-                        {user?.name || "Unknown"} • {formatTanggal(created_at)}
+                        {ticket.creator?.name || "Unknown"} •{" "}
+                        {formatTanggal(created_at)}
                     </p>
                 </div>
             </div>

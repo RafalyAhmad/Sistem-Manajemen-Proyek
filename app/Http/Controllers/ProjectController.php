@@ -13,7 +13,7 @@ class ProjectController extends Controller
     public function index()
     {
         return Inertia::render('ProjectManagement', [
-            'projects' => Project::with(['user', 'features'])->get(),
+            'projects' => Project::with(['users', 'features'])->get(),
             'users' => User::select('id', 'name')->get(),
             'features' => Feature::select('feature_id as id', 'feature_name', 'feature_cfp')->get(),
         ]);
@@ -21,7 +21,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $project->load('features');
+        $project->load(['users', 'features']);
 
         return Inertia::render('ProjectShow', [
             'project' => $project,
@@ -39,7 +39,9 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_ids' => 'required|array|min:1',
+            'user_ids.*' => 'exists:users,id',
+
             'project_name' => 'required|string|max:255',
             'initial_project_fee' => 'required|numeric',
             'final_project_fee' => 'required|numeric',
@@ -58,7 +60,16 @@ class ProjectController extends Controller
             'features' => 'required|array',
             'features.*' => 'exists:features,feature_id',
         ]);
+
+        unset($validatedData['user_ids']);
+        unset($validatedData['features']);
+
         $project = Project::create($validatedData);
+
+        //  attach users
+        $project->users()->attach($request->user_ids);
+
+        //  pivot feature data
         $pivotData = [];
 
         foreach ($request->features as $featureId) {
@@ -71,12 +82,13 @@ class ProjectController extends Controller
 
         $project->features()->sync($pivotData);
 
+        return redirect()->route('projects.index');
     }
 
     public function edit(Project $project)
     {
         return Inertia::render('Projects/Edit', [
-            'project' => $project->load('features'),
+            'project' => $project->load(['users', 'features']),
             'users' => User::select('id', 'name')->get(),
             'features' => Feature::select('feature_id', 'feature_name')->get(),
         ]);
@@ -85,7 +97,9 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_ids' => 'required|array|min:1',
+            'user_ids.*' => 'exists:users,id',
+
             'project_name' => 'required|string|max:255',
             'initial_project_fee' => 'required|numeric|min:0',
             'final_project_fee' => 'required|numeric',
@@ -100,18 +114,31 @@ class ProjectController extends Controller
             'working_hour_per_day' => 'required|numeric|min:1',
             'development_cost_per_day' => 'required|numeric|min:1',
             'line_of_code_per_day' => 'required|numeric|min:1',
+
             'features' => 'required|array',
             'features.*' => 'exists:features,feature_id',
         ]);
+
+        unset($validatedData['user_ids']);
+        unset($validatedData['features']);
+
         $project->update($validatedData);
-        // update relasi fitur
+
+        // update user assignment
+        $project->users()->sync($request->user_ids);
+
+        // update feature relation (tanpa reset pivot custom → kalau mau aman, pakai versi pivot lagi)
         $project->features()->sync($request->features);
 
+        return redirect()->route('projects.index');
     }
 
     public function destroy(Project $project)
     {
-        $project->features()->detach(); // bersihkan pivot
+        $project->users()->detach();
+        $project->features()->detach();
         $project->delete();
+
+        return redirect()->route('projects.index');
     }
 }

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id('project_id'); // PK
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // FK to 'users' table (as an example)
             $table->string('project_name', 255);
             $table->integer('initial_project_fee');
             $table->integer('final_project_fee');
