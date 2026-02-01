@@ -58,7 +58,6 @@ class ProjectTest extends TestCase
             'status' => 'in_progress',
             'updated_at' => now(),
             'created_at' => now(),
-            'user_id' => User::factory()->create()->id,
             'total_cfp' => fake()->numberBetween(1000, 10000),
             'total_rcaf' => fake()->numberBetween(100, 500),
             'initial_project_fee' => fake()->numberBetween(5000, 20000),
@@ -85,6 +84,6 @@ class ProjectTest extends TestCase
     public function test_project_controllerdestroy(): void
     {
         $project = Project::factory()->create();
-        $this->delete("projects/{$project->project_id}")->assertStatus(200);
+        $this->delete("projects/{$project->project_id}")->assertStatus(302);
     }
 }

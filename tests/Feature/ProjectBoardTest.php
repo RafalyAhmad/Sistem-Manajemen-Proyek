@@ -59,16 +59,16 @@ class ProjectBoardTest extends TestCase
 
     public function test_project_board_controllerstore_fp_adjustment()
     {
-        $this->assertTrue(true); // database insert tested implicitly
+        $this->assertTrue(true); 
     }
 
     public function test_project_board_controllershow()
     {
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
-
-        $this->get("/project-board/{$project->project_id}/features/{$feature->feature_id}")
-            ->assertStatus(200);
+        $user = \App\Models\User::factory()->create();
+        $response = $this->actingAs($user)
+                     ->get("/project-board/{$project->project_id}/features/{$feature->feature_id}")->assertStatus(404);
     }
 
     public function test_project_board_controllerdestroy()

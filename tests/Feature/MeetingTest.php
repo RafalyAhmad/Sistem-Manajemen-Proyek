@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\Project;
+use App\Models\User;
 
 class MeetingTest extends TestCase
 {
@@ -11,7 +13,11 @@ class MeetingTest extends TestCase
 
     public function test_meeting_controllerindex()
     {
-        $this->get('/meetings')->assertStatus(200);
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+                     ->get('/meetings')->assertStatus(200);
     }
 
     public function test_meeting_controllerstore()
@@ -67,7 +73,6 @@ class MeetingTest extends TestCase
     {
         $meeting = \App\Models\Meeting::create([
             'project_id' => 1,
-            'user_id' => 1,
             'title' => 'Diskusi Progres UAS',
             'description' => 'Membahas integrasi API dan Testing',
             'notulensi' => 'Draft awal notulensi',
@@ -83,7 +88,6 @@ class MeetingTest extends TestCase
     {
         $meeting = \App\Models\Meeting::create([
             'project_id' => 1,
-            'user_id' => 1,
             'title' => 'Diskusi Progres UAS',
             'description' => 'Membahas integrasi API dan Testing',
             'notulensi' => 'Draft awal notulensi',
@@ -93,7 +97,6 @@ class MeetingTest extends TestCase
 
         $response = $this->put("/meetings/{$meeting->meeting_id}", [
             'project_id' => 1,
-            'user_id' => 1,
             'title' => 'Diskusi Progres UAS - Update',
             'description' => 'Membahas integrasi API, Testing, dan Deployment',
             'notulensi' => 'Notulensi setelah update',
@@ -108,7 +111,6 @@ class MeetingTest extends TestCase
     {
         $meeting = \App\Models\Meeting::create([
             'project_id' => 1,
-            'user_id' => 1,
             'title' => 'Diskusi Progres UAS',
             'description' => 'Membahas integrasi API dan Testing',
             'notulensi' => 'Draft awal notulensi',

@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Ticket;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Project;
 
 class TicketTest extends TestCase
 {
@@ -12,15 +14,19 @@ class TicketTest extends TestCase
 
     public function test_ticket_controllerindex()
     {
-        $this->get('/tickets')->assertStatus(200);
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+                     ->get('/tickets')->assertStatus(200);
     }
 
     public function test_ticket_controllercreate()
     {
+        $this->withoutExceptionHandling();
         $ticket = Ticket::create([
             'title' => 'Sample Ticket',
-            'project_id' => 1,
-            'user_id' => 1,
+            'project_id' => Project::factory()->create()->project_id,
+            'user_id' => User::factory()->create()->id,
             'description' => 'This is a sample ticket description.',
             'status' => 'live',
         ]);
@@ -33,8 +39,8 @@ class TicketTest extends TestCase
     {
         $ticket = Ticket::create([
             'title' => 'Sample Ticket',
-            'project_id' => 1,
-            'user_id' => 1,
+            'project_id' => Project::factory()->create()->project_id,
+            'user_id' => User::factory()->create()->id,
             'description' => 'This is a sample ticket description.',
             'status' => 'live',
         ]);
@@ -47,8 +53,8 @@ class TicketTest extends TestCase
     {
         $ticket = Ticket::create([
             'title' => 'Sample Ticket',
-            'project_id' => 1,
-            'user_id' => 1,
+            'project_id' => Project::factory()->create()->project_id,
+            'user_id' => User::factory()->create()->id,
             'description' => 'This is a sample ticket description.',
             'status' => 'live',
         ]);
@@ -66,16 +72,16 @@ class TicketTest extends TestCase
     {
         $ticket = Ticket::create([
             'title' => 'Updated Ticket Title',
-            'project_id' => 1,
-            'user_id' => 1,
+           'project_id' => Project::factory()->create()->project_id,
+            'user_id' => User::factory()->create()->id,
             'description' => 'This is a sample ticket description.',
             'status' => 'live',
         ]);
 
         $this->put("/tickets/{$ticket->ticket_id}", [
             'title' => 'Updated Ticket Title',
-            'project_id' => 1,
-            'user_id' => 1,
+            'project_id' => Project::factory()->create()->project_id,
+            'user_id' => User::factory()->create()->id,
             'description' => 'This is an updated ticket description.',
             'status' => 'live',
         ]);
@@ -89,8 +95,8 @@ class TicketTest extends TestCase
     {
         $ticket = Ticket::create([
             'title' => 'Sample Ticket',
-            'project_id' => 1,
-            'user_id' => 1,
+           'project_id' => Project::factory()->create()->project_id,
+            'user_id' => User::factory()->create()->id,
             'description' => 'This is a sample ticket description.',
             'status' => 'live',
         ]);

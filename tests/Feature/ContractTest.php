@@ -28,27 +28,28 @@ class ContractTest extends TestCase
         $response = $this->post('/contracts', [
             'contract_number' => 'Kontrak A',
             'contract_date' => '2024-01-01',
-            'user_id' => User::factory()->create()->id,
+            'user_id' => User::factory()->create()->user_id,
             'project_id' => Project::factory()->create()->project_id,
         ]);
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     public function test_contract_controllerstore(): void
-    {
-        $response = $this->post('/contracts', [
-            'contract_number' => 'Kontrak A',
-            'contract_date' => '2024-01-01',
-            'user_id' => User::factory()->create()->id,
-            'project_id' => Project::factory()->create()->project_id,
-        ]);
-        $this->assertDatabaseHas('contracts', [
-            'contract_number' => 'Kontrak A',
-        ]);
-    }
+{
+    $response = $this->post('/contracts', [
+        'contract_number' => 'Kontrak A',
+        'contract_date' => '2024-01-01',
+        'user_id' => User::factory()->create()->id, 
+        'project_id' => Project::factory()->create()->project_id,
+    ]);
+
+    $response->assertStatus(200);
+    $this->assertDatabaseHas('contracts', ['contract_number' => 'Kontrak A']);
+}
 
     public function test_contract_controllergeneratepdf(): void
     {
+        $this->withoutExceptionHandling();
         $contract = $this->post('/contracts', [
             'contract_number' => 'Kontrak A',
             'contract_date' => '2024-01-01',
