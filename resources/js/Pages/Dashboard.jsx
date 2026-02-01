@@ -2,12 +2,22 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import MetricWidget from "@/Components/MetricWidget";
 import Widget from "@/Components/Widget";
+import { usePage } from "@inertiajs/react";
 
 export default function Dashboard() {
+    const {
+        totalProject,
+        totalClient,
+        totalDeveloper,
+        totalFeatureDone,
+        totalFeatureNotDone,
+    } = usePage().props;
     const metrics = [
-        { title: "Total Projects", value: 3 },
-        { title: "Total Tickets", value: 10 },
-        { title: "Total Developers", value: 2 },
+        { title: "Total Projects", value: totalProject },
+        { title: "Total Client", value: totalClient },
+        { title: "Total Developers", value: totalDeveloper },
+        { title: "Total Fitur Selesai", value: totalFeatureDone },
+        { title: "Total Fitur Belum Selesai", value: totalFeatureNotDone },
     ];
 
     return (
@@ -32,49 +42,7 @@ export default function Dashboard() {
                 ))}
             </div>
 
-            <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
-                <Widget
-                    title="Number of tickets per project"
-                    className="lg:col-span-1 min-h-[300px]"
-                >
-                    <p className="text-gray-500">Placeholder Chart 1</p>
-                </Widget>
-
-                <Widget
-                    title="Developer Statistics Chart"
-                    className="lg:col-span-1 min-h-[300px]"
-                >
-                    <p className="text-gray-500">Placeholder Chart 2</p>
-                </Widget>
-
-                <Widget
-                    title="Ticket Creation Trend"
-                    className="lg:col-span-2 min-h-[300px]"
-                >
-                    <p className="text-gray-500">Placeholder Chart 3</p>
-                </Widget>
-
-                <Widget
-                    title="Project Timeline"
-                    className="lg:col-span-2 min-h-[400px]"
-                >
-                    <p className="text-gray-500">Placeholder Timeline</p>
-                </Widget>
-
-                <Widget
-                    title="User Statistics"
-                    className="lg:col-span-1 min-h-[350px]"
-                >
-                    <p className="text-gray-500">Placeholder Table 1</p>
-                </Widget>
-
-                <Widget
-                    title="Recent Activities"
-                    className="lg:col-span-1 min-h-[350px]"
-                >
-                    <p className="text-gray-500">Placeholder Table 2</p>
-                </Widget>
-            </div>
+            <div className="mt-4"></div>
         </AuthenticatedLayout>
     );
 }

@@ -18,7 +18,6 @@ class NotificationController extends Controller
         return Inertia::render('Notifications', [
             'notifications' => $notifications,
         ]);
-        dd($notifications);
     }
 
     public function markAsRead($id)

@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             ProjectSeeder::class,
             FeatureSeeder::class,
-            FpAdjustmentSeeder::class,
         ]);
 
     }

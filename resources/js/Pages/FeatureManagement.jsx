@@ -215,7 +215,7 @@ export default function FeatureManagement() {
                             setWeightLIF(e.target.value);
                             calculateLogicalInternalFile(
                                 e.target.value,
-                                levelLIF
+                                levelLIF,
                             );
                         }}
                         className="border p-2 rounded"
@@ -227,7 +227,7 @@ export default function FeatureManagement() {
                             setLevelLIF(e.target.value);
                             calculateLogicalInternalFile(
                                 weightLIF,
-                                e.target.value
+                                e.target.value,
                             );
                         }}
                         className="border p-2 rounded"
@@ -246,7 +246,7 @@ export default function FeatureManagement() {
                             setWeightEIF(e.target.value);
                             calculateExternalInterfaceFile(
                                 e.target.value,
-                                levelEIF
+                                levelEIF,
                             );
                         }}
                         className="border p-2 rounded"
@@ -258,7 +258,7 @@ export default function FeatureManagement() {
                             setLevelEIF(e.target.value);
                             calculateExternalInterfaceFile(
                                 weightEIF,
-                                e.target.value
+                                e.target.value,
                             );
                         }}
                         className="border p-2 rounded"

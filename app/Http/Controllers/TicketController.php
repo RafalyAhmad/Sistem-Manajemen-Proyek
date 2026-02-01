@@ -9,25 +9,25 @@ use Inertia\Inertia;
 
 class TicketController extends Controller
 {
-   public function index()
-{
-    $tickets = Ticket::with([
+    public function index()
+    {
+        $tickets = Ticket::with([
             'project',
-            'creator:id,name' 
+            'creator:id,name',
         ])
-        ->whereHas('project.users', function ($q) {
-            $q->where('user_id', auth()->id());
-        })
-        ->get();
+            ->whereHas('project.users', function ($q) {
+                $q->where('user_id', auth()->id());
+            })
+            ->get();
 
-    return Inertia::render('Tickets', [
-        'tickets' => $tickets,
-        'projects' => auth()->user()
-            ->projects()
-            ->select('projects.project_id', 'projects.project_name')
-            ->get(),
-    ]);
-}
+        return Inertia::render('Tickets', [
+            'tickets' => $tickets,
+            'projects' => auth()->user()
+                ->projects()
+                ->select('projects.project_id', 'projects.project_name')
+                ->get(),
+        ]);
+    }
 
     public function create()
     {
@@ -50,12 +50,20 @@ class TicketController extends Controller
         $validatedData['status'] = 'live';
 
         // ✅ set pembuat otomatis
-        $validatedData['user_id'] = auth()->id(); 
+        $validatedData['user_id'] = auth()->id();
         // atau created_by kalau kamu rename kolomnya
 
-        Ticket::create($validatedData);
+        $ticket = Ticket::create($validatedData);
+        // Notifikasi ke semua anggota proyek
+        $project = Project::with('users')->findOrFail($validatedData['project_id']);
 
-        return redirect()->route('tickets.index');
+        foreach ($project->users as $user) {
+            NotificationController::notifyNewTicket(
+                $user->id,
+                $ticket->title,
+                $ticket->description
+            );
+        }
     }
 
     public function updateStatus(Request $request, Ticket $ticket)

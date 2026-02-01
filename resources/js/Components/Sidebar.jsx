@@ -151,63 +151,9 @@ export default function Sidebar({ showing, toggle }) {
             }
         `}
         >
-            {/* Menu Utama */}
-            {(role === "project manager" ||
-                role === "developer" ||
-                role === "client") && (
-                <SidebarSection title="All Menu">
-                    <SidebarItem
-                        href={route("project.board")}
-                        active={route().current("project.board")}
-                        icon={<ProjectsIcon />}
-                    >
-                        Project Board
-                    </SidebarItem>
-                    <SidebarItem
-                        href={route("features.index")}
-                        active={route().current("features.index")}
-                        icon={<ProjectsIcon />}
-                    >
-                        Project Timeline
-                    </SidebarItem>
-                    <SidebarItem
-                        href={route("tickets.index")}
-                        active={route().current("tickets.index")}
-                        icon={<TicketsIcon />}
-                    >
-                        Tickets
-                    </SidebarItem>
-                    <SidebarItem
-                        href={route("notifications.index")}
-                        active={route().current("notifications.index")}
-                        icon={<NotificationsIcon />}
-                    >
-                        Notifications
-                    </SidebarItem>
-                    <SidebarItem
-                        href={route("meetings.index")}
-                        active={route().current("meetings.index")}
-                        icon={<ProjectsIcon />}
-                    >
-                        Meetings
-                    </SidebarItem>
-                </SidebarSection>
-            )}
-            {(role === "project manager" || role === "developer") && (
-                <SidebarSection title="PM & Dev Menu">
-                    <SidebarItem
-                        href={route("features.index")}
-                        active={route().current("features.index")}
-                        icon={<ProjectsIcon />}
-                    >
-                        Feature Repository
-                    </SidebarItem>
-                </SidebarSection>
-            )}
-
-            {/* Bagian Settings */}
+            {/* Menu */}
             {role === "project manager" && (
-                <SidebarSection title="PM Settings">
+                <SidebarSection title="PM Menu">
                     <SidebarItem
                         href={route("dashboard")}
                         active={route().current("dashboard")}
@@ -235,6 +181,52 @@ export default function Sidebar({ showing, toggle }) {
                         icon={<ProjectsIcon />}
                     >
                         Contracts
+                    </SidebarItem>
+                </SidebarSection>
+            )}
+
+            {(role === "project manager" ||
+                role === "developer" ||
+                role === "client") && (
+                <SidebarSection title="All Menu">
+                    <SidebarItem
+                        href={route("project.board")}
+                        active={route().current("project.board")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Project Board
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("notifications.index")}
+                        active={route().current("notifications.index")}
+                        icon={<NotificationsIcon />}
+                    >
+                        Notifications
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("tickets.index")}
+                        active={route().current("tickets.index")}
+                        icon={<TicketsIcon />}
+                    >
+                        Tickets
+                    </SidebarItem>
+                    <SidebarItem
+                        href={route("meetings.index")}
+                        active={route().current("meetings.index")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Meetings
+                    </SidebarItem>
+                </SidebarSection>
+            )}
+            {(role === "project manager" || role === "developer") && (
+                <SidebarSection title="PM & Dev Menu">
+                    <SidebarItem
+                        href={route("features.index")}
+                        active={route().current("features.index")}
+                        icon={<ProjectsIcon />}
+                    >
+                        Feature Repository
                     </SidebarItem>
                 </SidebarSection>
             )}

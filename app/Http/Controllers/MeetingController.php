@@ -23,7 +23,10 @@ class MeetingController extends Controller
 
         return Inertia::render('MeetingManagement', [
             'meetings' => $meetings,
-            'projects' => Project::select('project_id', 'project_name')->get(),
+            'projects' => auth()->user()
+                ->projects()
+                ->select('projects.project_id', 'projects.project_name')
+                ->get(),
         ]);
     }
 
@@ -45,7 +48,7 @@ class MeetingController extends Controller
             'description' => 'required|string|max:255',
             'notulensi' => 'required|string|max:255',
             'meeting_time' => 'required|date',
-            'email_to' => 'nullable|string|max:255', 
+            'email_to' => 'nullable|string|max:255',
         ]);
 
         $meeting = Meeting::create($validatedData);
@@ -61,16 +64,23 @@ class MeetingController extends Controller
             ->toArray();
 
         //  tambah email manual kalau diisi
-        if (!empty($validatedData['email_to'])) {
+        if (! empty($validatedData['email_to'])) {
             $emails[] = $validatedData['email_to'];
         }
 
         // kirim ke banyak email
-        if (!empty($emails)) {
+        if (! empty($emails)) {
             Mail::to($emails)->send(new MeetingInvitationMail($meeting));
         }
 
-        return redirect()->route('meetings.index');
+        $project = Project::with('users')->findOrFail($validatedData['project_id']);
+
+        foreach ($project->users as $user) {
+            NotificationController::notifyNewMeeting(
+                $user->id,
+                $validatedData['meeting_time']
+            );
+        }
     }
 
     public function edit(Meeting $meeting)

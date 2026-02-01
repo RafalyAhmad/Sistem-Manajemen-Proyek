@@ -63,7 +63,7 @@ export default function ContractManagement() {
                 >
                     <div>
                         <label className="font-semibold mb-1 block">
-                            User terkait
+                            Nama Stakeholder
                         </label>
                         <select
                             className="w-full border rounded px-3 py-2"
@@ -147,8 +147,9 @@ export default function ContractManagement() {
                                 <th className="p-2 border">User</th>
                                 <th className="p-2 border">Project</th>
                                 <th className="p-2 border">Nomor Kontrak</th>
-                                <th className="p-2 border">Waktu Kontrak</th>
+                                <th className="p-2 border">Tanggal Kontrak</th>
                                 <th className="p-2 border">Aksi</th>
+                                <th className="p-2 border">File</th>
                             </tr>
                         </thead>
 
@@ -197,7 +198,7 @@ export default function ContractManagement() {
                                             target="_blank"
                                             className="bg-red-600 text-white px-3 py-1 rounded"
                                         >
-                                            Download PDF
+                                            Lihat PDF
                                         </a>
                                     </td>
                                 </tr>

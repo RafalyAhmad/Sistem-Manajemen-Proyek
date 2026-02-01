@@ -9,8 +9,8 @@ class ProjectSeeder extends Seeder
 {
     public function run(): void
     {
+        // 1️⃣ Insert project (TANPA user_id)
         $projectData = [
-            'user_id' => 1,
             'project_name' => 'Aplikasi Manajemen Tugas (TaskMaster)',
             'initial_project_fee' => 3540000,
             'final_project_fee' => 4200000,
@@ -29,23 +29,36 @@ class ProjectSeeder extends Seeder
             'updated_at' => now(),
         ];
 
-        // INI KUNCINYA (PK = project_id, bukan id)
+        // PK = project_id
         $projectId = DB::table('projects')->insertGetId(
             $projectData,
             'project_id'
         );
 
-        $features = [2, 1];
+        // 2️⃣ Assign users ke project (project_user)
+        $userIds = [1, 2]; // PM + member
+
+        foreach ($userIds as $userId) {
+            DB::table('project_user')->insert([
+                'project_id' => $projectId,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // 3️⃣ Assign feature ke project (feature_project)
+        $features = [1, 2];
 
         foreach ($features as $featureId) {
             DB::table('feature_project')->insert([
                 'project_id' => $projectId,
                 'feature_id' => $featureId,
                 'status' => 'to_do',
-                'created_at' => now(),
-                'updated_at' => now(),
                 'added_type' => 'baseline',
                 'fp_adjustment' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
     }

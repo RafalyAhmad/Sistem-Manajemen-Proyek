@@ -75,7 +75,7 @@ export default function TicketCard({ ticket, statusType, onAction }) {
     };
 
     return (
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col">
             <div className="flex items-start gap-4 mb-4">
                 <StatusIcon />
                 <div className="flex-1 min-w-0">
@@ -92,7 +92,7 @@ export default function TicketCard({ ticket, statusType, onAction }) {
                 </div>
             </div>
 
-            <div className="flex-1">
+            <div className="mt-4">
                 <p className="text-sm text-gray-600 mb-6 line-clamp-3">
                     {description}
                 </p>

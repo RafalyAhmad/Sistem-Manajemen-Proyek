@@ -14,12 +14,12 @@ class ProjectBoardTest extends TestCase
     public function test_project_board_controllerindex()
     {
         $project = Project::factory()->create();
-        $feature = Feature::factory()->create();        
+        $feature = Feature::factory()->create();
         $project->features()->attach($feature->feature_id, [
             'status' => 'to_do',
             'added_type' => 'baseline',
-            'fp_adjustment' => 0,  
-             
+            'fp_adjustment' => 0,
+
         ]);
 
         $this->get('/project-board')->assertStatus(200);
@@ -31,13 +31,13 @@ class ProjectBoardTest extends TestCase
         $feature = Feature::factory()->create();
 
         $response = $this->post(route('project.board.add', $project->project_id), [
-            'feature_id' => $feature->feature_id
+            'feature_id' => $feature->feature_id,
         ]);
 
         $this->assertDatabaseHas('feature_project', [
             'project_id' => $project->project_id,
             'feature_id' => $feature->feature_id,
-            'status' => 'to_do'
+            'status' => 'to_do',
         ]);
     }
 
@@ -47,10 +47,10 @@ class ProjectBoardTest extends TestCase
         $feature = Feature::factory()->create();
 
         $project->features()->attach($feature->feature_id, [
-        'added_type' => 'baseline',
-        'fp_adjustment' => 0,
-        'status' => 'to_do',        
-    ]);
+            'added_type' => 'baseline',
+            'fp_adjustment' => 0,
+            'status' => 'to_do',
+        ]);
 
         $this->patch("/project-board/{$project->project_id}/features/{$feature->feature_id}/status", [
             'status' => 'done',
@@ -76,11 +76,11 @@ class ProjectBoardTest extends TestCase
         $project = Project::factory()->create();
         $feature = Feature::factory()->create();
 
-         $project->features()->attach($feature->feature_id, [
-        'added_type' => 'baseline',
-        'fp_adjustment' => 0,
-        'status' => 'to_do',        
-    ]);
+        $project->features()->attach($feature->feature_id, [
+            'added_type' => 'baseline',
+            'fp_adjustment' => 0,
+            'status' => 'to_do',
+        ]);
 
         $this->delete("/project-board/{$project->project_id}/features/{$feature->feature_id}");
 

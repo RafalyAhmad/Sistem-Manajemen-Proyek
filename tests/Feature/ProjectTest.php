@@ -2,28 +2,29 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Project;
 use App\Models\Feature;
+use App\Models\Project;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ProjectTest extends TestCase
 {
-   use RefreshDatabase;
+    use RefreshDatabase;
 
     public function test_project_controllerindex(): void
     {
         $response = $this->get('/projects');
         $response->assertStatus(200);
     }
+
     public function test_project_controllercreate(): void
     {
         $project = Project::factory()->create();
         $response = $this->get('/projects/create');
         $response->assertStatus(302);
     }
+
     public function test_project_controllerstore(): void
     {
         $project = Project::factory()->create();
@@ -31,17 +32,20 @@ class ProjectTest extends TestCase
             'project_id' => $project->project_id,
         ]);
     }
+
     public function test_project_controllershow(): void
     {
         $project = Project::factory()->create();
         $response = $this->get("/projects/{$project->project_id}")->assertStatus(200);
     }
+
     public function test_project_controlleredit(): void
     {
         $project = Project::factory()->create();
         $response = $this->get("/projects/{$project->project_id}/edit");
         $response->assertStatus(302);
     }
+
     public function test_project_controllerupdate(): void
     {
         $project = Project::factory()->create();
@@ -65,21 +69,22 @@ class ProjectTest extends TestCase
             'total_feature_time' => 5,
             'working_hour_per_day' => 8,
             'development_cost_per_day' => 50000,
-            'line_of_code_per_day' => 250, 
+            'line_of_code_per_day' => 250,
             'features' => [$feature->feature_id],
-            ]);
-            $project->features()->attach($feature->feature_id, [
+        ]);
+        $project->features()->attach($feature->feature_id, [
             'status' => 'to_do',
             'added_type' => 'baseline',
-            'fp_adjustment' => 0,  
+            'fp_adjustment' => 0,
         ]);
         $this->assertDatabaseHas('projects', [
             'project_id' => $project->project_id,
         ]);
     }
+
     public function test_project_controllerdestroy(): void
     {
         $project = Project::factory()->create();
-       $this->delete("projects/{$project->project_id}")->assertStatus(200);
+        $this->delete("projects/{$project->project_id}")->assertStatus(200);
     }
 }

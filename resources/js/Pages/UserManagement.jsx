@@ -1,6 +1,5 @@
 import React from "react";
-import { useForm, usePage } from "@inertiajs/react";
-import SidebarLayout from "@/Layouts/SidebarLayout";
+import { useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Widget from "@/Components/Widget";
 
@@ -13,7 +12,7 @@ export default function UserManagement({ users, roles }) {
         delete: destroy,
         reset,
     } = useForm({
-        id: "",
+        id: null,
         name: "",
         email: "",
         role: "",
@@ -24,11 +23,11 @@ export default function UserManagement({ users, roles }) {
         e.preventDefault();
 
         if (data.id) {
-            put(`/users/${data.id}`, {
+            put(route("users.update", data.id), {
                 onSuccess: () => reset(),
             });
         } else {
-            post("/users", {
+            post(route("users.store"), {
                 onSuccess: () => reset(),
             });
         }
@@ -39,14 +38,14 @@ export default function UserManagement({ users, roles }) {
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.roles?.[0]?.name || "",
+            role: user.roles?.[0]?.name ?? "",
             password: "",
         });
     };
 
     const deleteUser = (id) => {
         if (confirm("Yakin ingin menghapus user ini?")) {
-            destroy(`/users/${id}`);
+            destroy(route("users.destroy", id));
         }
     };
 
@@ -63,6 +62,7 @@ export default function UserManagement({ users, roles }) {
                         value={data.name}
                         onChange={(e) => setData("name", e.target.value)}
                         className="border p-2 w-full rounded"
+                        required
                     />
 
                     <input
@@ -71,9 +71,9 @@ export default function UserManagement({ users, roles }) {
                         value={data.email}
                         onChange={(e) => setData("email", e.target.value)}
                         className="border p-2 w-full rounded"
+                        required
                     />
 
-                    {/* TAMPILKAN PASSWORD HANYA SAAT TAMBAH USER */}
                     {!data.id && (
                         <input
                             type="password"
@@ -83,6 +83,7 @@ export default function UserManagement({ users, roles }) {
                                 setData("password", e.target.value)
                             }
                             className="border p-2 w-full rounded"
+                            required
                         />
                     )}
 
@@ -90,6 +91,7 @@ export default function UserManagement({ users, roles }) {
                         value={data.role}
                         onChange={(e) => setData("role", e.target.value)}
                         className="border p-2 w-full rounded"
+                        required
                     >
                         <option value="">-- Pilih Role --</option>
                         {roles.map((r) => (
@@ -99,10 +101,7 @@ export default function UserManagement({ users, roles }) {
                         ))}
                     </select>
 
-                    <button
-                        type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded"
-                    >
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded">
                         {data.id ? "Update" : "Simpan"}
                     </button>
                 </form>
@@ -123,7 +122,7 @@ export default function UserManagement({ users, roles }) {
                                 <td className="p-2 border">{u.name}</td>
                                 <td className="p-2 border">{u.email}</td>
                                 <td className="p-2 border font-semibold">
-                                    {u.roles?.[0]?.name || "-"}
+                                    {u.roles?.[0]?.name ?? "-"}
                                 </td>
                                 <td className="p-2 border flex gap-2">
                                     <button

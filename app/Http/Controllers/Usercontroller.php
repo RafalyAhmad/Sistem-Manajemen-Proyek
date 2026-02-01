@@ -33,13 +33,13 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // ✅ SPATIE ROLE
+        // SPATIE ROLE
         $user->assignRole($request->role);
 
         return redirect()->back();
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -47,20 +47,20 @@ class UserController extends Controller
             'role' => 'required|exists:roles,name',
         ]);
 
-        $user->update([
+        $id->update([
             'name' => $request->name,
             'email' => $request->email,
         ]);
 
-        // ✅ update role
-        $user->syncRoles([$request->role]);
+        // update role
+        $id->syncRoles([$request->role]);
 
         return redirect()->back();
     }
 
-    public function destroy(User $user)
+    public function destroy(User $id)
     {
-        $user->delete();
+        $id->delete();
 
         return redirect()->back();
     }
