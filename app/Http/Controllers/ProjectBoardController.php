@@ -68,11 +68,13 @@ class ProjectBoardController extends Controller
     {
         $request->validate([
             'status' => 'required|in:to_do,in_progress,done',
+            'added_type' => 'required|string',
         ]);
 
         DB::table('feature_project')
             ->where('project_id', $project->project_id)
             ->where('feature_id', $feature->feature_id)
+            ->where('added_type', $request->added_type)
             ->update([
                 'status' => $request->status,
                 'updated_at' => now(),
@@ -130,8 +132,19 @@ class ProjectBoardController extends Controller
         ]);
     }
 
-    public function destroy(Project $project, Feature $feature)
-    {
-        $project->features()->detach($feature->feature_id);
-    }
+    // public function destroy(Project $project, Feature $feature)
+    // {
+    //     $project->features()->detach($feature->feature_id);
+    // }
+    public function destroy(Request $request, Project $project, Feature $feature)
+{
+    // Jangan detach secara general, tapi hapus baris yang spesifik
+    DB::table('feature_project')
+        ->where('project_id', $project->project_id)
+        ->where('feature_id', $feature->feature_id)
+        ->where('added_type', $request->added_type) // <--- PERBAIKAN
+        ->delete();
+        
+    return back();
+}
 }

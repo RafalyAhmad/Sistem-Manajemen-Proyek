@@ -36,14 +36,34 @@ export default function ProjectBoard({ project, projects, features }) {
         );
     };
 
-    const onDragEnd = (result) => {
-        const { destination, draggableId } = result;
-        if (!destination) return;
+    // const onDragEnd = (result) => {
+    //     const { destination, draggableId, source } = result;
+    //     if (!destination) return;
+    //     if (destination.droppableId === source.droppableId) return;
 
-        // Cek apakah kolom berubah
-        if (destination.droppableId !== result.source.droppableId) {
-            updateStatus(draggableId, destination.droppableId);
-        }
+    //     const originalFeatureId = draggableId.split("-")[0];
+
+    //     updateStatus(originalFeatureId, destination.droppableId);
+    // };
+    const onDragEnd = (result) => {
+        const { destination, draggableId, source } = result;
+        if (!destination) return;
+        if (destination.droppableId === source.droppableId) return;
+
+        // DraggableId kita sudah unik (format: "ID-TYPE")
+        const [fId, type] = draggableId.split("-");
+
+        router.patch(
+            route("project.board.update-status", {
+                project: project.project_id,
+                feature: fId,
+            }),
+            {
+                status: destination.droppableId,
+                added_type: type, // Kirim ini ke Controller!
+            },
+            { preserveScroll: true },
+        );
     };
 
     const updateStatus = (fId, status) => {
@@ -57,14 +77,17 @@ export default function ProjectBoard({ project, projects, features }) {
         );
     };
 
-    const deleteFeature = (fId) => {
-        if (confirm("Yakin ingin menghapus fitur ini?")) {
+    const deleteFeature = (fId, type) => {
+        if (confirm(`Yakin ingin menghapus fitur ${type} ini?`)) {
             router.delete(
                 route("project.board.destroy", {
                     project: project.project_id,
                     feature: fId,
                 }),
-                { preserveScroll: true },
+                {
+                    data: { added_type: type }, // Kirim type ke BE agar tidak terhapus keduanya
+                    preserveScroll: true,
+                },
             );
         }
     };
@@ -77,7 +100,7 @@ export default function ProjectBoard({ project, projects, features }) {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Pilih Project
+                            Project
                         </label>
                         <select
                             className="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 w-full md:w-64"

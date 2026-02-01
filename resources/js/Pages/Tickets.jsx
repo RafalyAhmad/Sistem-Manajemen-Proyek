@@ -5,7 +5,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TicketCard from "@/Components/TicketCard";
 
 export default function Tickets() {
-    const { tickets, projects } = usePage().props;
+    const { tickets, projects, auth } = usePage().props;
+
+    const userRole = auth?.user?.role;
 
     const updateStatus = (ticketId, status) => {
         router.patch(route("tickets.update-status", { ticket: ticketId }), {
@@ -119,7 +121,7 @@ export default function Tickets() {
             <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <section className="space-y-4">
                     <h3 className="font-bold">
-                        Ticket Baru ({liveTickets.length})
+                        New Tickets : {liveTickets.length}
                     </h3>
                     {liveTickets.map((t) => (
                         <TicketCard
@@ -127,13 +129,14 @@ export default function Tickets() {
                             ticket={t}
                             statusType="live"
                             onAction={updateStatus}
+                            isProjectManager={userRole === "project manager"}
                         />
                     ))}
                 </section>
 
                 <section className="space-y-4">
                     <h3 className="font-bold">
-                        Diterima ({approvedTickets.length})
+                        Approved Tickets : {approvedTickets.length}
                     </h3>
                     {approvedTickets.map((t) => (
                         <TicketCard
@@ -141,13 +144,14 @@ export default function Tickets() {
                             ticket={t}
                             statusType="approve"
                             onAction={updateStatus}
+                            isProjectManager={userRole === "project manager"}
                         />
                     ))}
                 </section>
 
                 <section className="space-y-4">
                     <h3 className="font-bold">
-                        Ditolak ({declinedTickets.length})
+                        Declined Tickets : {declinedTickets.length}
                     </h3>
                     {declinedTickets.map((t) => (
                         <TicketCard
@@ -155,6 +159,7 @@ export default function Tickets() {
                             ticket={t}
                             statusType="decline"
                             onAction={updateStatus}
+                            isProjectManager={userRole === "project manager"}
                         />
                     ))}
                 </section>
